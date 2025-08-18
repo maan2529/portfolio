@@ -1,8 +1,8 @@
 import React from "react"
 
-const Skills = () => {
+const Skills = ({id}) => {
     return (
-        <section data-scroll-section className="bg-black text-white py-16 sm:pt-15 px-14 lg:px-20">
+        <section id={id} data-scroll-section className="bg-black text-white py-16 sm:pt-15 px-14 lg:px-20">
 
             <h2 className="text-center lg:text-right text-4xl sm:text-[8vw] font-bold mb-10">Skills</h2>
             <div className="flex flex-col-reverse sm:flex-row  justify-between gap-12 w-full ">

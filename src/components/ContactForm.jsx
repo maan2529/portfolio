@@ -1,8 +1,8 @@
 import React from "react";
 
-const ContactForm = () => {
+const ContactForm = ({ id }) => {
     return (
-        <section data-scroll-section className="w-full min-h-screen  bg-gradient-to-b from-black/100 to-black/70 px-4 py-12">
+        <section id={id} data-scroll-section className="w-full min-h-screen  bg-gradient-to-b from-black/100 to-black/70 px-4 py-12">
 
             <div className="flex flex-col items-center justify-center">
                 {/* Heading */}

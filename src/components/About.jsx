@@ -2,8 +2,9 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/all'
 import React from 'react'
+import SideNav from './SideNav'
 
-const About = () => {
+const About = ({ id }) => {
 
     useGSAP(() => {
         const sections = gsap.utils.toArray('.technology');
@@ -26,7 +27,7 @@ const About = () => {
 
 
     return (
-        <section data-scroll-section className='rounded-tl-4xl rounded-tr-4xl  bg-black text-white py-10 px-8 sm:pb-50 font-["DM sans 9pt"]' >
+        <section id={id} data-scroll-section className='rounded-tl-4xl rounded-tr-4xl  bg-black text-white py-10 px-8 sm:pb-50 font-["DM sans 9pt"]' >
 
             <div >
 
@@ -62,7 +63,7 @@ const About = () => {
 
                                 <div className="num w-[40%] hidden sm:block text-4xl font-semibold ">(01)</div>
                                 <div className="tech sm:w-[60%] ">
-                                    <div className='flex text-4xl font-semibold gap-5 pb-7  text-gray-200'>
+                                    <div className='flex text-4xl font-semibold gap-5 pb-7 pt-4 sm:pt-0 text-gray-200'>
                                         <span className='sm:hidden'>(01)</span>
                                         <h1 className='sm:text-[4vw]'> Full Stack Development</h1>
                                     </div>
@@ -98,7 +99,7 @@ const About = () => {
 
                                 <div className="num w-[40%] hidden sm:block text-4xl font-semibold ">(02)</div>
                                 <div className="tech sm:w-[60%] ">
-                                    <div className='flex text-4xl font-semibold gap-5 pb-7  text-gray-200'>
+                                    <div className='flex text-4xl font-semibold gap-5 pb-7  text-gray-200 pt-4 sm:pt-0'>
                                         <span className='sm:hidden'>(02)</span>
                                         <h1 className='sm:text-[4vw]'> Full Stack Development</h1>
                                     </div>
@@ -133,7 +134,7 @@ const About = () => {
 
                                 <div className="num w-[40%] hidden sm:block text-4xl font-semibold ">(03)</div>
                                 <div className="tech sm:w-[60%] ">
-                                    <div className='flex text-4xl font-semibold gap-5 pb-7 text-gray-200'>
+                                    <div className='flex text-4xl font-semibold gap-5 pb-7 text-gray-200 pt-4 sm:pt-0'>
                                         <span className='sm:hidden'>(03)</span>
                                         <h1 className='sm:text-[4vw]'> Full Stack Development</h1>
                                     </div>

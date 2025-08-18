@@ -20,3 +20,7 @@
     font-weight: lighter;
     font-style: normal;
 }
+
+html {
+    scroll-behavior: smooth;
+}

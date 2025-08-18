@@ -1,8 +1,8 @@
 import React from "react";
 
-const AboutMe = () => {
+const AboutMe = ({ id }) => {
     return (
-        <section data-scroll-section  className="bg-black text-white px-6 sm:px-10 lg:px-20 py-16">
+        <section id={id} data-scroll-section className="bg-black text-white px-6 sm:px-10 lg:px-20 py-16">
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-10 lg:gap-16">
 
                 {/* LEFT IMAGE */}

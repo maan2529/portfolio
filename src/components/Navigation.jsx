@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 
 const Navigation = () => {
     const [time, setTime] = useState("");
-
+    const handleScroll = (id) => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.scrollIntoView({ behavior: "smooth" });
+        }
+    };
     useEffect(() => {
         const updateTime = () => {
             const now = new Date();
@@ -33,11 +38,26 @@ const Navigation = () => {
                             Menu
                         </h3>
                         <ul className="space-y-2">
-                            <li><a href="#home" className="hover:text-black">Home</a></li>
-                            <li><a href="#services" className="hover:text-black">Services</a></li>
-                            <li><a href="#works" className="hover:text-black">Works</a></li>
-                            <li><a href="#about" className="hover:text-black">About</a></li>
-                            <li><a href="#contact" className="hover:text-black">Contact</a></li>
+                            <li><a
+                                
+                                rel="noopener noreferrer"
+                                href="#hero" className="hover:text-black">Home</a></li>
+                            <li><a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href="#services" className="hover:text-black">Services</a></li>
+                            <li><a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href="#works" className="hover:text-black">Works</a></li>
+                            <li><a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href="#about" className="hover:text-black">About</a></li>
+                            <li><a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href="#contact" className="hover:text-black">Contact</a></li>
                         </ul>
                     </div>
 
@@ -47,9 +67,19 @@ const Navigation = () => {
                             Socials
                         </h3>
                         <ul className="space-y-2">
-                            <li><a href="#" className="hover:text-black">LinkedIn</a></li>
-                            <li><a href="#" className="hover:text-black">Instagram</a></li>
-                            <li><a href="#" className="hover:text-black">Github</a></li>
+                            <li><a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href="https://www.linkedin.com/in/hemant-singh-137b01228"
+                                className="hover:text-black">LinkedIn</a></li>
+                            <li><a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href="https://www.instagram.com/_hemant_1213_?igsh=MXZmdDd3Z2U1aTB4" className="hover:text-black">Instagram</a></li>
+                            <li><a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href="https://github.com/maan2529" className="hover:text-black">Github</a></li>
                         </ul>
 
                         {/* Local Time */}

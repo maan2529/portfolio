@@ -5,7 +5,7 @@ import React, { useState, useRef, useEffect } from "react"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const Projects = () => {
+const Projects = ({id}) => {
 
     const [currentNum, setCurrentNum] = useState(1)
     const numberRef = useRef(null)
@@ -51,7 +51,7 @@ const Projects = () => {
 
 
     return (
-        <section data-scroll-section>
+        <section id={id} data-scroll-section>
 
             <div data-scroll data-scroll-speed={-0.7}>
 

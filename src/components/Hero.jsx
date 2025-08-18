@@ -1,22 +1,42 @@
 import React from 'react'
 
-const Hero = () => {
+const Hero = ({ id }) => {
     return (
-        <section data-scroll-section className="relative bg-[rgb(232,232,226)] min-h-screen px-5 py-2 flex flex-col ">
+        <section id={id} data-scroll-section className=" bg-[rgb(232,232,226)] min-h-screen px-5 py-2 flex flex-col ">
+
+
 
             <div data-scroll data-scroll-speed={-2.4}>
-                <div className="topnav z-12 flex justify-between text-lg text-[#5d5956]  py-5 font-semibold ">
+                <div className="topnav z-12 flex justify-between text-lg text-[#5d5956]  py-5  font-semibold ">
                     {/* Left Text */}
                     <div className="w-35 sm:w-100">
                         <p>Web Developer & Designer</p>
 
                     </div>
                     {/* Right Nav Links */}
-                    <div className=" text-right sm:flex sm:gap-6">
-                        <p>Services</p>
-                        <p>Works</p>
-                        <p>About</p>
-                        <p>Contact</p>
+                    <div className="  sm:flex sm:gap-6">
+                        <ul className="space-y-2 sm:flex leading-5 sm:gap-4">
+                            <li><a
+
+                                rel="noopener noreferrer"
+                                href="#hero" className="hover:text-black">Projects</a></li>
+                            <li><a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href="#services" className="hover:text-black">Skills</a></li>
+                            <li><a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href="#works" className="hover:text-black">About Me</a></li>
+                            {/* <li><a
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    href="#about" className="hover:text-black">About</a></li> */}
+                            <li><a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href="#contact" className="hover:text-black">Contact</a></li>
+                        </ul>
                     </div>
                 </div>
 
