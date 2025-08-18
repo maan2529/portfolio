@@ -20,7 +20,13 @@ const About = ({ id }) => {
                 pinType: "transform",
                 anticipatePin: 1,
                 refreshPriority: -1,
-                pinSpacing: false,                  // overlap effect ke liye
+                pinSpacing: false,
+
+
+                //------
+                scrub: true,
+                markers: true,
+                // overlap effect ke liye
             });
         });
     }, []);
