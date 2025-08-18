@@ -12,26 +12,18 @@ import AboutMe from './AboutMe'
 import ContactForm from './ContactForm'
 import Navigation from './Navigation'
 import SideNav from './SideNav'
-import { div } from 'motion/react-client'
+
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function Home() {
 
-    const [sideNav, setSideNav] = useState(true)
+    const [sideNav, setSideNav] = useState(false)
 
     return (
 
 
         <div className='relative bg-[#E8E8E2] font-["DM-Sans"]'>
-
-            {/* <button
-
-                className="fixed top-10 right-10 w-16 h-16 rounded-full 
-                   bg-amber-700 text-white shadow-lg z-[200]"
-            >
-                {sideNav ? "X" : "≡"}
-            </button> */}
 
             <button
                 onClick={() => setSideNav(prev => !prev)}
@@ -60,9 +52,6 @@ export default function Home() {
                     />
                 </svg>
             </button>
-
-
-
 
             {/* <Starter /> */}
             {/* {sideNav && } */}

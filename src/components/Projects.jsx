@@ -5,11 +5,14 @@ import React, { useState, useRef, useEffect } from "react"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const Projects = ({id}) => {
+const Projects = ({ id }) => {
 
     const [currentNum, setCurrentNum] = useState(1)
     const numberRef = useRef(null)
 
+    ScrollTrigger.defaults({ // debug kar ke hata dena hai 
+        markers: true
+    });
     useGSAP(() => {
         // Pin the whole section
         ScrollTrigger.create({
