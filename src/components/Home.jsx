@@ -14,7 +14,7 @@ import Navigation from './Navigation'
 import SideNav from './SideNav'
 
 
-gsap.registerPlugin(ScrollTrigger)
+// gsap.registerPlugin(ScrollTrigger)
 
 export default function Home() {
 
