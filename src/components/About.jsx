@@ -5,50 +5,55 @@ import { useGSAP } from '@gsap/react'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const About = ({ id }) => {
+const About = ({ id, locomotiveReady }) => {
     const triggersRef = useRef([])
-    const isInitialized = useRef(false)
+    const setupComplete = useRef(false)
 
     useGSAP(() => {
-        // Prevent multiple initializations
-        if (isInitialized.current) return;
-        
-        // Check if we're in browser environment
+        // Wait for locomotive to be ready
+        if (!locomotiveReady || setupComplete.current) return;
+
         if (typeof window === "undefined") {
-            console.log("❌ Not in browser environment");
+            console.log("❌ ABOUT: Not in browser environment");
             return;
         }
 
-        console.log("🚀 Initializing About ScrollTriggers");
+        console.log("🚀 ABOUT: Setting up with locomotive ready");
 
         const setupTriggers = () => {
             try {
-                // Mark as initialized
-                isInitialized.current = true;
+                setupComplete.current = true;
 
                 // Clear previous triggers
                 triggersRef.current.forEach(trigger => trigger.kill());
                 triggersRef.current = [];
 
-                // Wait for locomotive to be ready
-                const checkLocomotive = () => {
-                    const locomotiveContainer = document.querySelector('[data-scroll-container]');
+                const forceLayout = () => {
                     const sections = document.querySelectorAll('.technology');
-                    
-                    if (!locomotiveContainer || sections.length === 0) {
-                        console.log("⏳ Waiting for locomotive container or technology sections...");
-                        setTimeout(checkLocomotive, 100);
+
+                    if (sections.length === 0) {
+                        console.log("❌ ABOUT: No technology sections found");
                         return;
                     }
 
-                    console.log(`✅ Found ${sections.length} technology sections, creating triggers`);
+                    console.log(`🎯 ABOUT: Found ${sections.length} technology sections`);
 
                     sections.forEach((el, index) => {
-                        // Ensure parent element exists
+                        // Force layout calculation
+                        el.style.transform = 'translateZ(0)';
+
+                        // Check parent element
                         if (!el.parentElement) {
-                            console.warn(`❌ Parent element not found for section ${index}`);
+                            console.warn(`❌ ABOUT: Parent element not found for section ${index}`);
                             return;
                         }
+
+                        // Get measurements
+                        const elRect = el.getBoundingClientRect();
+                        const parentRect = el.parentElement.getBoundingClientRect();
+
+                        console.log(`📏 ABOUT: Section ${index} height:`, elRect.height);
+                        console.log(`📏 ABOUT: Parent ${index} height:`, parentRect.height);
 
                         const trigger = ScrollTrigger.create({
                             trigger: el,
@@ -61,40 +66,51 @@ const About = ({ id }) => {
                             anticipatePin: 1,
                             refreshPriority: -1,
                             pinSpacing: false,
-                            onPin: () => console.log(`📌 Technology section ${index} pinned`),
-                            onUnpin: () => console.log(`📌 Technology section ${index} unpinned`),
-                            onRefresh: () => console.log(`🔄 Technology section ${index} refreshed`)
+                            immediateRender: false,
+                            onPin: () => {
+                                console.log(`📌 ABOUT SECTION ${index} PINNED! ✅`);
+                                el.style.zIndex = `${20 + index}`;
+                            },
+                            onUnpin: () => {
+                                console.log(`📌 ABOUT SECTION ${index} UNPINNED! ✅`);
+                            },
+                            onRefresh: () => {
+                                console.log(`🔄 ABOUT: Technology section ${index} refreshed`);
+                            }
                         });
 
                         triggersRef.current.push(trigger);
                     });
 
-                    console.log(`✅ Created ${triggersRef.current.length} About triggers`);
+                    // Force final refresh after all triggers are created
+                    setTimeout(() => {
+                        ScrollTrigger.refresh();
+                        console.log(`✅ ABOUT SETUP COMPLETE - ${triggersRef.current.length} triggers created`);
+                    }, 400);
                 };
 
-                checkLocomotive();
+                // Execute with delay to ensure DOM is stable
+                setTimeout(forceLayout, 200);
 
             } catch (error) {
-                console.error("❌ Error setting up About triggers:", error);
-                isInitialized.current = false;
+                console.error("❌ ABOUT: Setup error:", error);
+                setupComplete.current = false;
             }
         };
 
-        // Add longer delay for About section (more complex)
-        const timeoutId = setTimeout(setupTriggers, 800);
+        setupTriggers();
 
         return () => {
-            clearTimeout(timeoutId);
             triggersRef.current.forEach(trigger => trigger.kill());
             triggersRef.current = [];
-            isInitialized.current = false;
+            setupComplete.current = false;
         };
-    }, []); // Empty dependency array
+    }, [locomotiveReady]); // Depend on locomotiveReady
 
     return (
-        <section 
-            id={id} 
-            data-scroll-section 
+        <section
+            id={id}
+            data-scroll-section
             className='rounded-tl-4xl rounded-tr-4xl bg-black text-white py-10 px-8 sm:pb-50 font-["DM sans 9pt"]'
         >
             <div>
@@ -121,7 +137,7 @@ const About = ({ id }) => {
 
                 <div className="skills">
                     <div className="pages flex flex-col gap-2">
-                        
+
                         <div className='technology bg-black'>
                             <hr className="bg-gray-100 h-[1px] opacity-30" />
                             <div className="skillspageOne w-full flex items-start sm:px-10 sm:py-4">
@@ -133,7 +149,7 @@ const About = ({ id }) => {
                                     </div>
 
                                     <p className='text-sm leading-tight text-gray-300 pb-4 sm:w-[55%] font-semibold sm:leading-5'>
-                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus? 
+                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus?
                                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus?
                                     </p>
 
@@ -145,12 +161,12 @@ const About = ({ id }) => {
                                         <hr className="my-4 bg-gray-100 h-[1px] opacity-30" />
                                         <div className='flex gap-4 items-center'>
                                             <p className='text-zinc-400 font-bold text-xl'>02</p>
-                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>React, Node.js, Express.js</h1>
+                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>MongoDB, PostgreSQL</h1>
                                         </div>
                                         <hr className="my-4 bg-gray-100 h-[1px] opacity-30" />
                                         <div className='flex gap-4 items-center'>
                                             <p className='text-zinc-400 font-bold text-xl'>03</p>
-                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>React, Node.js, Express.js</h1>
+                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>AWS, Docker</h1>
                                         </div>
                                     </div>
                                 </div>
@@ -164,28 +180,28 @@ const About = ({ id }) => {
                                 <div className="tech sm:w-[60%]">
                                     <div className='flex text-4xl font-semibold gap-5 pb-7 text-gray-200 pt-4 sm:pt-0'>
                                         <span className='sm:hidden'>(02)</span>
-                                        <h1 className='sm:text-[4vw]'>Full Stack Development</h1>
+                                        <h1 className='sm:text-[4vw]'>Frontend Development</h1>
                                     </div>
 
                                     <p className='text-sm leading-tight text-gray-300 pb-4 sm:w-[55%] font-semibold sm:leading-5'>
-                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus? 
-                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus?
+                                        Creating responsive and interactive user interfaces with modern frameworks
+                                        and libraries. Focus on performance and user experience.
                                     </p>
 
                                     <div>
                                         <div className='flex gap-4 items-center sm:text-2xl'>
                                             <p className='text-zinc-400 font-bold text-xl'>01</p>
-                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>React, Node.js, Express.js</h1>
+                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>React, Vue.js, Next.js</h1>
                                         </div>
                                         <hr className="my-4 bg-gray-100 h-[1px] opacity-30" />
                                         <div className='flex gap-4 items-center'>
                                             <p className='text-zinc-400 font-bold text-xl'>02</p>
-                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>React, Node.js, Express.js</h1>
+                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>TypeScript, JavaScript</h1>
                                         </div>
                                         <hr className="my-4 bg-gray-100 h-[1px] opacity-30" />
                                         <div className='flex gap-4 items-center'>
                                             <p className='text-zinc-400 font-bold text-xl'>03</p>
-                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>React, Node.js, Express.js</h1>
+                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>GSAP, Framer Motion</h1>
                                         </div>
                                     </div>
                                 </div>
@@ -199,28 +215,28 @@ const About = ({ id }) => {
                                 <div className="tech sm:w-[60%]">
                                     <div className='flex text-4xl font-semibold gap-5 pb-7 text-gray-200 pt-4 sm:pt-0'>
                                         <span className='sm:hidden'>(03)</span>
-                                        <h1 className='sm:text-[4vw]'>Full Stack Development</h1>
+                                        <h1 className='sm:text-[4vw]'>UI/UX Design</h1>
                                     </div>
 
                                     <p className='text-sm leading-tight text-gray-300 pb-4 sm:w-[55%] sm:leading-5 font-semibold'>
-                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus? 
-                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus?
+                                        Designing intuitive and beautiful user experiences. From wireframes
+                                        to high-fidelity prototypes with attention to detail.
                                     </p>
 
                                     <div>
                                         <div className='flex gap-4 items-center sm:text-2xl'>
                                             <p className='text-zinc-400 font-bold text-xl'>01</p>
-                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>React, Node.js, Express.js</h1>
+                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>Figma, Adobe XD</h1>
                                         </div>
                                         <hr className="my-4 bg-gray-100 h-[1px] opacity-30" />
                                         <div className='flex gap-4 items-center'>
                                             <p className='text-zinc-400 font-bold text-xl'>02</p>
-                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>React, Node.js, Express.js</h1>
+                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>Prototyping, Wireframing</h1>
                                         </div>
                                         <hr className="my-4 bg-gray-100 h-[1px] opacity-30" />
                                         <div className='flex gap-4 items-center'>
                                             <p className='text-zinc-400 font-bold text-xl'>03</p>
-                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>React, Node.js, Express.js</h1>
+                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>User Research, Testing</h1>
                                         </div>
                                     </div>
                                 </div>
