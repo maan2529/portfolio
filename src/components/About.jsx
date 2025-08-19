@@ -13,7 +13,7 @@ const About = ({ id }) => {
             ScrollTrigger.create({
                 trigger: el,
                 // start: `top ${10 + 16 * index}%`,   // pin start point
-                start: `top 40%%`, //test
+                start: `top 60%`, //test
                 endTrigger: el.parentElement,       // parent ko end trigger banaya
                 end: "bottom bottom",                  // parent ke bottom ke bottom me 
                 scroller: "[data-scroll-container]",
