@@ -5,14 +5,11 @@ import React, { useState, useRef, useEffect } from "react"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const Projects = ({ id }) => {
+const Projects = ({id}) => {
 
     const [currentNum, setCurrentNum] = useState(1)
     const numberRef = useRef(null)
 
-    ScrollTrigger.defaults({ // debug kar ke hata dena hai 
-        markers: true
-    });
     useGSAP(() => {
         // Pin the whole section
         ScrollTrigger.create({
@@ -26,10 +23,6 @@ const Projects = ({ id }) => {
             refreshPriority: -1,
             pinSpacing: false,
 
-            //----------
-            scrub: true,
-            markers: true,
-
         })
 
 
@@ -40,10 +33,6 @@ const Projects = ({ id }) => {
                 onEnter: () => setCurrentNum(i + 1),
                 onEnterBack: () => setCurrentNum(i + 1),
                 scroller: "[data-scroll-container]",
-
-                //-----
-                scrub: true,
-                markers: true,
             })
         })
 
@@ -55,10 +44,7 @@ const Projects = ({ id }) => {
             gsap.fromTo(
                 numberRef.current,
                 { y: "100%", opacity: 0 },
-                { y: "0%", opacity: 1, duration: 1.4, ease: "cubic-bezier(0.76, 0, 0.24, 1)" },
-
-                //----------scrub: true,
-                
+                { y: "0%", opacity: 1, duration: 1.4, ease: "cubic-bezier(0.76, 0, 0.24, 1)" }
             )
         }
     }, [currentNum])

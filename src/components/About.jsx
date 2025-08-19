@@ -12,8 +12,7 @@ const About = ({ id }) => {
         sections.forEach((el, index) => {
             ScrollTrigger.create({
                 trigger: el,
-                // start: `top ${10 + 16 * index}%`,   // pin start point
-                start: `top 60%`, //test
+                start: `top ${10 + 16 * index}%`,   // pin start point
                 endTrigger: el.parentElement,       // parent ko end trigger banaya
                 end: "bottom bottom",                  // parent ke bottom ke bottom me 
                 scroller: "[data-scroll-container]",
@@ -21,13 +20,7 @@ const About = ({ id }) => {
                 pinType: "transform",
                 anticipatePin: 1,
                 refreshPriority: -1,
-                pinSpacing: false,
-
-
-                //------
-                scrub: true,
-                markers: true,
-                // overlap effect ke liye
+                pinSpacing: false,                  // overlap effect ke liye
             });
         });
     }, []);
