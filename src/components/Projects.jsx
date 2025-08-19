@@ -5,47 +5,45 @@ import { useGSAP } from '@gsap/react'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const Projects = ({ id }) => {
+const Projects = ({ id, locomotiveReady }) => {
     const [currentNum, setCurrentNum] = useState(1)
     const numberRef = useRef(null)
     const mainDiv = useRef(null)
     const staticPage = useRef(null)
     const triggersRef = useRef([])
-    const isInitialized = useRef(false)
+    const setupComplete = useRef(false)
 
     useGSAP(() => {
-        // Prevent multiple initializations
-        if (isInitialized.current) return;
-        
-        // Check if elements exist and we're in browser
+        // Wait for locomotive to be ready
+        if (!locomotiveReady || setupComplete.current) return;
+
         if (!mainDiv.current || !staticPage.current || typeof window === "undefined") {
-            console.log("❌ Elements not ready or not in browser");
+            console.log("❌ Projects: Elements not ready");
             return;
         }
 
-        console.log("🚀 Initializing Projects ScrollTriggers");
+        console.log("🚀 PROJECTS: Setting up with locomotive ready");
 
         const setupTriggers = () => {
             try {
-                // Mark as initialized
-                isInitialized.current = true;
+                setupComplete.current = true;
 
-                // Clear any existing triggers for this component
+                // Clear existing
                 triggersRef.current.forEach(trigger => trigger.kill());
                 triggersRef.current = [];
 
-                // Wait for locomotive to be ready
-                const checkLocomotive = () => {
-                    const locomotiveContainer = document.querySelector('[data-scroll-container]');
-                    if (!locomotiveContainer) {
-                        console.log("⏳ Waiting for locomotive container...");
-                        setTimeout(checkLocomotive, 100);
-                        return;
-                    }
+                // Force height recalculation
+                const forceLayout = () => {
+                    mainDiv.current.style.transform = 'translateZ(0)';
+                    staticPage.current.style.transform = 'translateZ(0)';
 
-                    console.log("✅ Locomotive container found, creating triggers");
+                    // Create pin trigger with explicit measurements
+                    const triggerRect = mainDiv.current.getBoundingClientRect();
+                    const pinRect = staticPage.current.getBoundingClientRect();
 
-                    // Create pin trigger
+                    console.log("📏 Trigger height:", triggerRect.height);
+                    console.log("📏 Pin height:", pinRect.height);
+
                     const pinTrigger = ScrollTrigger.create({
                         trigger: mainDiv.current,
                         start: "top -70%",
@@ -56,70 +54,86 @@ const Projects = ({ id }) => {
                         anticipatePin: 1,
                         refreshPriority: -1,
                         pinSpacing: false,
-                        onPin: () => console.log("📌 Projects section pinned"),
-                        onUnpin: () => console.log("📌 Projects section unpinned"),
-                        onRefresh: () => console.log("🔄 Pin trigger refreshed")
+                        // Force refresh on creation
+                        immediateRender: false,
+                        onPin: () => {
+                            console.log("📌 PROJECTS PINNED! ✅");
+                            staticPage.current.style.zIndex = "10";
+                        },
+                        onUnpin: () => {
+                            console.log("📌 PROJECTS UNPINNED! ✅");
+                        },
+                        onRefresh: () => {
+                            console.log("🔄 Projects pin refreshed");
+                        }
                     });
 
                     triggersRef.current.push(pinTrigger);
 
-                    // Create project triggers with delay
+                    // Project number triggers
                     setTimeout(() => {
                         const projectElements = document.querySelectorAll(".project");
-                        console.log(`🎯 Found ${projectElements.length} project elements`);
-                        
+                        console.log(`🎯 Creating triggers for ${projectElements.length} projects`);
+
                         projectElements.forEach((el, i) => {
+                            const rect = el.getBoundingClientRect();
+                            console.log(`📏 Project ${i + 1} height:`, rect.height);
+
                             const projectTrigger = ScrollTrigger.create({
                                 trigger: el,
                                 start: "top center",
                                 scroller: "[data-scroll-container]",
                                 onEnter: () => {
-                                    console.log(`👆 Entering project ${i + 1}`);
+                                    console.log(`🎯 ENTERING PROJECT ${i + 1} ✅`);
                                     setCurrentNum(i + 1);
                                 },
                                 onEnterBack: () => {
-                                    console.log(`👇 Entering back project ${i + 1}`);
+                                    console.log(`🎯 ENTERING BACK PROJECT ${i + 1} ✅`);
                                     setCurrentNum(i + 1);
                                 },
                             });
-                            
+
                             triggersRef.current.push(projectTrigger);
                         });
 
-                        console.log(`✅ Created ${triggersRef.current.length} total triggers`);
-                    }, 200);
+                        // Force final refresh
+                        setTimeout(() => {
+                            ScrollTrigger.refresh();
+                            console.log("✅ PROJECTS SETUP COMPLETE");
+                        }, 200);
+
+                    }, 300);
                 };
 
-                checkLocomotive();
+                // Execute with delay
+                setTimeout(forceLayout, 100);
 
             } catch (error) {
-                console.error("❌ Error setting up Projects triggers:", error);
-                isInitialized.current = false;
+                console.error("❌ Projects setup error:", error);
+                setupComplete.current = false;
             }
         };
 
-        // Setup with proper delay
-        const timeoutId = setTimeout(setupTriggers, 500);
+        setupTriggers();
 
         return () => {
-            clearTimeout(timeoutId);
             triggersRef.current.forEach(trigger => trigger.kill());
             triggersRef.current = [];
-            isInitialized.current = false;
+            setupComplete.current = false;
         };
-    }, []); // Empty dependency array to run only once
+    }, [locomotiveReady]); // Depend on locomotiveReady
 
-    // Number animation effect
+    // Number animation
     useEffect(() => {
         if (numberRef.current) {
             gsap.fromTo(
                 numberRef.current,
                 { y: "100%", opacity: 0 },
-                { 
-                    y: "0%", 
-                    opacity: 1, 
-                    duration: 1.4, 
-                    ease: "cubic-bezier(0.76, 0, 0.24, 1)" 
+                {
+                    y: "0%",
+                    opacity: 1,
+                    duration: 1.4,
+                    ease: "cubic-bezier(0.76, 0, 0.24, 1)"
                 }
             );
         }

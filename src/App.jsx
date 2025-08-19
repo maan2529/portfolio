@@ -1,4 +1,4 @@
-// App.jsx
+// App.jsx - ULTIMATE FIX
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
@@ -12,34 +12,35 @@ gsap.registerPlugin(ScrollTrigger);
 function App() {
   const scrollRef = useRef(null);
   const locoRef = useRef(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // Check if we're in browser environment
     if (typeof window === "undefined") return;
 
     let locomotiveScroll;
-    let rafId;
 
     const initScroll = () => {
       try {
-        // Kill all existing ScrollTriggers first
+        // Kill all existing triggers
         ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        ScrollTrigger.clearMatchMedia();
         
-        // Initialize Locomotive Scroll
+        // Initialize Locomotive with production settings
         locomotiveScroll = new LocomotiveScroll({
           el: scrollRef.current,
           smooth: true,
-          multiplier: 1.2, // Reduced for better performance
+          multiplier: 1,
           smartphone: { smooth: true },
           tablet: { smooth: true },
           resetNativeScroll: true,
           touchMultiplier: 2,
+          // Force recalculation
+          reloadOnContextChange: true,
         });
 
         locoRef.current = locomotiveScroll;
 
-        // Set up ScrollTrigger proxy
+        // Enhanced ScrollTrigger proxy
         ScrollTrigger.scrollerProxy(scrollRef.current, {
           scrollTop(value) {
             return arguments.length
@@ -57,72 +58,77 @@ function App() {
           pinType: scrollRef.current?.style.transform ? "transform" : "fixed",
         });
 
-        // Link Locomotive updates with ScrollTrigger
-        locomotiveScroll.on("scroll", () => {
-          ScrollTrigger.update();
-        });
-
-        // Update locomotive when ScrollTrigger refreshes
+        // Critical: Link updates
+        locomotiveScroll.on("scroll", ScrollTrigger.update);
+        
         ScrollTrigger.addEventListener("refresh", () => {
-          requestAnimationFrame(() => {
-            locomotiveScroll.update();
-          });
+          locomotiveScroll.update();
         });
 
-        // Initial refresh with proper timing
-        requestAnimationFrame(() => {
+        // Force multiple refreshes for production
+        const forceRefresh = () => {
           locomotiveScroll.update();
           ScrollTrigger.refresh();
-          setIsLoading(false);
-          console.log("🚀 Locomotive and ScrollTrigger initialized");
-        });
+          
+          // Second refresh after a delay
+          setTimeout(() => {
+            locomotiveScroll.update();
+            ScrollTrigger.refresh();
+            setIsReady(true);
+            console.log("🎉 ALL SYSTEMS READY");
+          }, 500);
+        };
+
+        // Wait for images and fonts
+        if (document.readyState === 'complete') {
+          setTimeout(forceRefresh, 200);
+        } else {
+          window.addEventListener('load', () => {
+            setTimeout(forceRefresh, 200);
+          });
+        }
 
       } catch (error) {
-        console.error("Error initializing scroll:", error);
-        setIsLoading(false);
+        console.error("❌ Scroll init error:", error);
+        setIsReady(true); // Fallback
       }
     };
 
-    // Wait for DOM to be fully loaded
-    if (document.readyState === 'complete') {
-      setTimeout(initScroll, 100);
-    } else {
-      window.addEventListener('load', () => {
-        setTimeout(initScroll, 100);
-      });
-    }
+    // Multiple initialization attempts
+    setTimeout(initScroll, 100);
 
-    // Cleanup function
     return () => {
-      if (rafId) cancelAnimationFrame(rafId);
       if (locomotiveScroll) {
         locomotiveScroll.destroy();
       }
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
       locoRef.current = null;
     };
   }, []);
 
-  // Window resize handler
+  // Enhanced resize handler
   useEffect(() => {
     const handleResize = () => {
-      if (locoRef.current && !isLoading) {
-        requestAnimationFrame(() => {
+      if (locoRef.current && isReady) {
+        setTimeout(() => {
           locoRef.current.update();
           ScrollTrigger.refresh();
-        });
+        }, 250);
       }
     };
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [isLoading]);
+  }, [isReady]);
 
   return (
     <div ref={scrollRef} data-scroll-container>
-      {/* Add loading state to prevent premature trigger creation */}
-      <div style={{ opacity: isLoading ? 0 : 1, transition: 'opacity 0.3s' }}>
-        <Home />
+      <div style={{ 
+        opacity: isReady ? 1 : 0.3, 
+        transition: 'opacity 0.5s',
+        minHeight: '100vh' // Force height calculation
+      }}>
+        <Home locomotiveReady={isReady} />
       </div>
     </div>
   );

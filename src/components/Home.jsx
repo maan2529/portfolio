@@ -16,7 +16,7 @@ import SideNav from './SideNav'
 
 gsap.registerPlugin(ScrollTrigger)
 
-export default function Home() {
+export default function Home({ locomotiveReady }) {
 
     const [sideNav, setSideNav] = useState(false)
 
@@ -45,8 +45,8 @@ export default function Home() {
             <SideNav isOpen={sideNav} />
 
             <Hero id={"hero"} />
-            <About id={"about"} />
-            <Projects id={"projects"} />
+            <About id={"about"} locomotiveReady={locomotiveReady} />
+            <Projects id={"projects"} locomotiveReady={locomotiveReady} />
             <Skills id={"skills"} />
             <AboutMe id={"aboutme"} />
             <ContactForm id={"contact"} />
@@ -58,30 +58,30 @@ export default function Home() {
 
     )
 }
-            // <button
-            //     onClick={() => setSideNav(prev => !prev)}
-            //     className="fixed top-14 right-10 z-[99999999] p-3  rounded-full shadow-lg cursor-pointer opacity-100 bg-zinc-100/70"
-            // >
-            //     <svg width="35" height="35" viewBox="0 0 35 35">
-            //         {/* Top line */}
-            //         <line
-            //             x1="2" y1="13.5" x2="33" y2="13.5"
-            //             stroke="black" strokeWidth="2" strokeLinecap="round"
-            //             style={{
-            //                 transformOrigin: "50% 50%",
-            //                 transform: sideNav ? "translateY(8px) rotate(45deg)" : "none",
-            //                 transition: "transform 0.3s ease"
-            //             }}
-            //         />
-            //         {/* Bottom line */}
-            //         <line
-            //             x1="2" y1="21.5" x2="33" y2="21.5"
-            //             stroke="black" strokeWidth="2" strokeLinecap="round"
-            //             style={{
-            //                 transformOrigin: "50% 50%",
-            //                 transform: sideNav ? "translateY(-8px) rotate(-45deg)" : "none",
-            //                 transition: "transform 0.3s ease"
-            //             }}
-            //         />
-            //     </svg>
-            // </button>
+// <button
+//     onClick={() => setSideNav(prev => !prev)}
+//     className="fixed top-14 right-10 z-[99999999] p-3  rounded-full shadow-lg cursor-pointer opacity-100 bg-zinc-100/70"
+// >
+//     <svg width="35" height="35" viewBox="0 0 35 35">
+//         {/* Top line */}
+//         <line
+//             x1="2" y1="13.5" x2="33" y2="13.5"
+//             stroke="black" strokeWidth="2" strokeLinecap="round"
+//             style={{
+//                 transformOrigin: "50% 50%",
+//                 transform: sideNav ? "translateY(8px) rotate(45deg)" : "none",
+//                 transition: "transform 0.3s ease"
+//             }}
+//         />
+//         {/* Bottom line */}
+//         <line
+//             x1="2" y1="21.5" x2="33" y2="21.5"
+//             stroke="black" strokeWidth="2" strokeLinecap="round"
+//             style={{
+//                 transformOrigin: "50% 50%",
+//                 transform: sideNav ? "translateY(-8px) rotate(-45deg)" : "none",
+//                 transition: "transform 0.3s ease"
+//             }}
+//         />
+//     </svg>
+// </button>
