@@ -6,73 +6,95 @@ import { useGSAP } from '@gsap/react'
 gsap.registerPlugin(ScrollTrigger)
 
 const About = ({ id }) => {
-    const triggersRef = useRef([]) // Store triggers for cleanup
+    const triggersRef = useRef([])
+    const isInitialized = useRef(false)
 
     useGSAP(() => {
+        // Prevent multiple initializations
+        if (isInitialized.current) return;
+        
         // Check if we're in browser environment
-        if (typeof window === "undefined") return;
+        if (typeof window === "undefined") {
+            console.log("❌ Not in browser environment");
+            return;
+        }
 
-        // Clear previous triggers
-        triggersRef.current.forEach(trigger => trigger.kill());
-        triggersRef.current = [];
+        console.log("🚀 Initializing About ScrollTriggers");
 
         const setupTriggers = () => {
-            const sections = gsap.utils.toArray('.technology');
+            try {
+                // Mark as initialized
+                isInitialized.current = true;
 
-            // Check if sections exist
-            if (sections.length === 0) {
-                console.log("No .technology sections found");
-                return;
-            }
+                // Clear previous triggers
+                triggersRef.current.forEach(trigger => trigger.kill());
+                triggersRef.current = [];
 
-            sections.forEach((el, index) => {
-                // Ensure parent element exists
-                if (!el.parentElement) {
-                    console.warn(`Parent element not found for section ${index}`);
-                    return;
-                }
-
-                const trigger = ScrollTrigger.create({
-                    trigger: el,
-                    start: `top ${10 + 16 * index}%`,
-                    endTrigger: el.parentElement,
-                    end: "bottom bottom",
-                    scroller: "[data-scroll-container]",
-                    pin: el,
-                    pinType: "transform",
-                    anticipatePin: 1,
-                    refreshPriority: -1,
-                    pinSpacing: false,
-                    // Add debug info
-                    onRefresh: () => {
-                        console.log(`Technology section ${index} refreshed`);
-                    },
-                    onPin: () => {
-                        console.log(`Technology section ${index} pinned`);
-                    },
-                    onUnpin: () => {
-                        console.log(`Technology section ${index} unpinned`);
+                // Wait for locomotive to be ready
+                const checkLocomotive = () => {
+                    const locomotiveContainer = document.querySelector('[data-scroll-container]');
+                    const sections = document.querySelectorAll('.technology');
+                    
+                    if (!locomotiveContainer || sections.length === 0) {
+                        console.log("⏳ Waiting for locomotive container or technology sections...");
+                        setTimeout(checkLocomotive, 100);
+                        return;
                     }
-                });
 
-                triggersRef.current.push(trigger);
-            });
+                    console.log(`✅ Found ${sections.length} technology sections, creating triggers`);
+
+                    sections.forEach((el, index) => {
+                        // Ensure parent element exists
+                        if (!el.parentElement) {
+                            console.warn(`❌ Parent element not found for section ${index}`);
+                            return;
+                        }
+
+                        const trigger = ScrollTrigger.create({
+                            trigger: el,
+                            start: `top ${10 + 16 * index}%`,
+                            endTrigger: el.parentElement,
+                            end: "bottom bottom",
+                            scroller: "[data-scroll-container]",
+                            pin: el,
+                            pinType: "transform",
+                            anticipatePin: 1,
+                            refreshPriority: -1,
+                            pinSpacing: false,
+                            onPin: () => console.log(`📌 Technology section ${index} pinned`),
+                            onUnpin: () => console.log(`📌 Technology section ${index} unpinned`),
+                            onRefresh: () => console.log(`🔄 Technology section ${index} refreshed`)
+                        });
+
+                        triggersRef.current.push(trigger);
+                    });
+
+                    console.log(`✅ Created ${triggersRef.current.length} About triggers`);
+                };
+
+                checkLocomotive();
+
+            } catch (error) {
+                console.error("❌ Error setting up About triggers:", error);
+                isInitialized.current = false;
+            }
         };
 
-        // Add delay for production environment
-        const timeoutId = setTimeout(setupTriggers, 300);
+        // Add longer delay for About section (more complex)
+        const timeoutId = setTimeout(setupTriggers, 800);
 
         return () => {
             clearTimeout(timeoutId);
             triggersRef.current.forEach(trigger => trigger.kill());
             triggersRef.current = [];
+            isInitialized.current = false;
         };
-    }, []);
+    }, []); // Empty dependency array
 
     return (
-        <section
-            id={id}
-            data-scroll-section
+        <section 
+            id={id} 
+            data-scroll-section 
             className='rounded-tl-4xl rounded-tr-4xl bg-black text-white py-10 px-8 sm:pb-50 font-["DM sans 9pt"]'
         >
             <div>
@@ -99,7 +121,7 @@ const About = ({ id }) => {
 
                 <div className="skills">
                     <div className="pages flex flex-col gap-2">
-
+                        
                         <div className='technology bg-black'>
                             <hr className="bg-gray-100 h-[1px] opacity-30" />
                             <div className="skillspageOne w-full flex items-start sm:px-10 sm:py-4">
@@ -111,7 +133,7 @@ const About = ({ id }) => {
                                     </div>
 
                                     <p className='text-sm leading-tight text-gray-300 pb-4 sm:w-[55%] font-semibold sm:leading-5'>
-                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus?
+                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus? 
                                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus?
                                     </p>
 
@@ -146,7 +168,7 @@ const About = ({ id }) => {
                                     </div>
 
                                     <p className='text-sm leading-tight text-gray-300 pb-4 sm:w-[55%] font-semibold sm:leading-5'>
-                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus?
+                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus? 
                                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus?
                                     </p>
 
@@ -181,7 +203,7 @@ const About = ({ id }) => {
                                     </div>
 
                                     <p className='text-sm leading-tight text-gray-300 pb-4 sm:w-[55%] sm:leading-5 font-semibold'>
-                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus?
+                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus? 
                                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus?
                                     </p>
 

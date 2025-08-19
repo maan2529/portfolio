@@ -10,68 +10,104 @@ const Projects = ({ id }) => {
     const numberRef = useRef(null)
     const mainDiv = useRef(null)
     const staticPage = useRef(null)
-    const triggersRef = useRef([]) // Store triggers for cleanup
+    const triggersRef = useRef([])
+    const isInitialized = useRef(false)
 
     useGSAP(() => {
+        // Prevent multiple initializations
+        if (isInitialized.current) return;
+        
         // Check if elements exist and we're in browser
-        if (!mainDiv.current || !staticPage.current || typeof window === "undefined") return;
+        if (!mainDiv.current || !staticPage.current || typeof window === "undefined") {
+            console.log("❌ Elements not ready or not in browser");
+            return;
+        }
 
-        // Clear previous triggers
-        triggersRef.current.forEach(trigger => trigger.kill());
-        triggersRef.current = [];
+        console.log("🚀 Initializing Projects ScrollTriggers");
 
-        // Wait a bit for Locomotive to be ready
         const setupTriggers = () => {
-            // Pin the whole section
-            const pinTrigger = ScrollTrigger.create({
-                trigger: mainDiv.current,
-                start: "top -70%",
-                end: "bottom bottom",
-                pin: staticPage.current,
-                scroller: "[data-scroll-container]",
-                pinType: "transform",
-                anticipatePin: 1,
-                refreshPriority: -1,
-                pinSpacing: false,
-                // Add error handling
-                onRefresh: () => {
-                    console.log("Pin trigger refreshed");
-                }
-            });
+            try {
+                // Mark as initialized
+                isInitialized.current = true;
 
-            triggersRef.current.push(pinTrigger);
+                // Clear any existing triggers for this component
+                triggersRef.current.forEach(trigger => trigger.kill());
+                triggersRef.current = [];
 
-            // Set up project triggers
-            const projectElements = gsap.utils.toArray(".project");
+                // Wait for locomotive to be ready
+                const checkLocomotive = () => {
+                    const locomotiveContainer = document.querySelector('[data-scroll-container]');
+                    if (!locomotiveContainer) {
+                        console.log("⏳ Waiting for locomotive container...");
+                        setTimeout(checkLocomotive, 100);
+                        return;
+                    }
 
-            projectElements.forEach((el, i) => {
-                const projectTrigger = ScrollTrigger.create({
-                    trigger: el,
-                    start: "top center",
-                    onEnter: () => {
-                        console.log(`Entering project ${i + 1}`);
-                        setCurrentNum(i + 1);
-                    },
-                    onEnterBack: () => {
-                        console.log(`Entering back project ${i + 1}`);
-                        setCurrentNum(i + 1);
-                    },
-                    scroller: "[data-scroll-container]",
-                });
+                    console.log("✅ Locomotive container found, creating triggers");
 
-                triggersRef.current.push(projectTrigger);
-            });
+                    // Create pin trigger
+                    const pinTrigger = ScrollTrigger.create({
+                        trigger: mainDiv.current,
+                        start: "top -70%",
+                        end: "bottom bottom",
+                        pin: staticPage.current,
+                        scroller: "[data-scroll-container]",
+                        pinType: "transform",
+                        anticipatePin: 1,
+                        refreshPriority: -1,
+                        pinSpacing: false,
+                        onPin: () => console.log("📌 Projects section pinned"),
+                        onUnpin: () => console.log("📌 Projects section unpinned"),
+                        onRefresh: () => console.log("🔄 Pin trigger refreshed")
+                    });
+
+                    triggersRef.current.push(pinTrigger);
+
+                    // Create project triggers with delay
+                    setTimeout(() => {
+                        const projectElements = document.querySelectorAll(".project");
+                        console.log(`🎯 Found ${projectElements.length} project elements`);
+                        
+                        projectElements.forEach((el, i) => {
+                            const projectTrigger = ScrollTrigger.create({
+                                trigger: el,
+                                start: "top center",
+                                scroller: "[data-scroll-container]",
+                                onEnter: () => {
+                                    console.log(`👆 Entering project ${i + 1}`);
+                                    setCurrentNum(i + 1);
+                                },
+                                onEnterBack: () => {
+                                    console.log(`👇 Entering back project ${i + 1}`);
+                                    setCurrentNum(i + 1);
+                                },
+                            });
+                            
+                            triggersRef.current.push(projectTrigger);
+                        });
+
+                        console.log(`✅ Created ${triggersRef.current.length} total triggers`);
+                    }, 200);
+                };
+
+                checkLocomotive();
+
+            } catch (error) {
+                console.error("❌ Error setting up Projects triggers:", error);
+                isInitialized.current = false;
+            }
         };
 
-        // Setup with delay for production
-        const timeoutId = setTimeout(setupTriggers, 200);
+        // Setup with proper delay
+        const timeoutId = setTimeout(setupTriggers, 500);
 
         return () => {
             clearTimeout(timeoutId);
             triggersRef.current.forEach(trigger => trigger.kill());
             triggersRef.current = [];
+            isInitialized.current = false;
         };
-    }, []);
+    }, []); // Empty dependency array to run only once
 
     // Number animation effect
     useEffect(() => {
@@ -79,11 +115,11 @@ const Projects = ({ id }) => {
             gsap.fromTo(
                 numberRef.current,
                 { y: "100%", opacity: 0 },
-                {
-                    y: "0%",
-                    opacity: 1,
-                    duration: 1.4,
-                    ease: "cubic-bezier(0.76, 0, 0.24, 1)"
+                { 
+                    y: "0%", 
+                    opacity: 1, 
+                    duration: 1.4, 
+                    ease: "cubic-bezier(0.76, 0, 0.24, 1)" 
                 }
             );
         }
@@ -117,7 +153,6 @@ const Projects = ({ id }) => {
                     <div className="flex">
                         {/* LEFT — stays pinned */}
                         <div ref={staticPage} className="staticPage hidden h-[80vh] sm:w-[40%] sm:flex sm:items-start sm:justify-center sm:text-[18vw] font-light text-gray-400 font-['montrealMono']">
-                            {/* container that hides overflow so sliding works */}
                             <span className="overflow-hidden h-[1em] leading-none">
                                 <span ref={numberRef}>
                                     {String(currentNum).padStart(2, '0')}
@@ -171,7 +206,7 @@ const Projects = ({ id }) => {
                                     <div className='sm:flex sm:justify-between sm:py-3'>
                                         <div className='mt-5 sm:mt-0'>
                                             <p className='text-lg font-bold'>Web Development</p>
-                                            <h2 className='text-2xl font-semibonal'>Movie Recommendation</h2>
+                                            <h2 className='text-2xl font-semibold'>Movie Recommendation</h2>
                                         </div>
                                         <div className='flex justify-start mt-5 sm:mt-0 sm:justify-center items-end gap-5'>
                                             <div className='px-3 py-1 rounded-full border-1 border-zinc-200 bg-transparent flex justify-center items-center text-sm w-fit h-fit'>Development</div>
