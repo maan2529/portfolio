@@ -9,45 +9,40 @@ const Projects = ({ id }) => {
 
     const [currentNum, setCurrentNum] = useState(1)
     const numberRef = useRef(null)
+    const project = useRef(null)
+    const mainDiv = useRef(null)
+    const staticPage = useRef(null)
 
-    ScrollTrigger.defaults({ // debug kar ke hata dena hai 
-        markers: true
-    });
+    // ScrollTrigger.defaults({ // debug kar ke hata dena hai 
+    //     markers: true
+    // });
     useGSAP(() => {
         // Pin the whole section
         ScrollTrigger.create({
-            trigger: ".mainDiv",
+            trigger: mainDiv.current,
             start: "top -70%",
             end: "bottom bottom",
-            pin: ".staticPage",
+            pin: staticPage.current,
             scroller: "[data-scroll-container]",
             pinType: "transform",
             anticipatePin: 1,
             refreshPriority: -1,
             pinSpacing: false,
 
-            //----------
-            scrub: true,
-            markers: true,
-
         })
 
 
-        gsap.utils.toArray(".project").forEach((el, i) => {
+        gsap.utils.toArray('.project').forEach((el, i) => {
             ScrollTrigger.create({
                 trigger: el,
                 start: "top center",
                 onEnter: () => setCurrentNum(i + 1),
                 onEnterBack: () => setCurrentNum(i + 1),
                 scroller: "[data-scroll-container]",
-
-                //-----
-                scrub: true,
-                markers: true,
             })
         })
 
-    }, [])
+    }, { scope: mainDiv })
 
     useEffect(() => {
         if (numberRef.current) {
@@ -57,8 +52,8 @@ const Projects = ({ id }) => {
                 { y: "100%", opacity: 0 },
                 { y: "0%", opacity: 1, duration: 1.4, ease: "cubic-bezier(0.76, 0, 0.24, 1)" },
 
-                //----------scrub: true,
-                
+
+
             )
         }
     }, [currentNum])
@@ -70,7 +65,7 @@ const Projects = ({ id }) => {
             <div data-scroll data-scroll-speed={-0.7}>
 
                 <hr className="block sm:hidden bg-gray-100 h-[1px] opacity-20" />
-                <div className="relative mainDiv bg-black text-white py-10 px-5 sm:px-8 min-h-screen">
+                <div ref={mainDiv} className="relative mainDiv bg-black text-white py-10 px-5 sm:px-8 min-h-screen">
                     {/* Top heading */}
                     <div className="servics text-gray-300 pb-20">
                         <h1 className="text-[15vw] sm:text-[9vw] uppercase font-semibold tracking-tighter leading-none text-gray-200">
@@ -93,7 +88,7 @@ const Projects = ({ id }) => {
                     {/* Two-column layout */}
                     <div className="flex">
                         {/* LEFT — stays pinned */}
-                        <div className="staticPage hidden  h-[80vh] sm:w-[40%] sm:flex sm:items-start sm:justify-center sm:text-[18vw] font-light text-gray-400 font-['montrealMono']">
+                        <div ref={staticPage} className="staticPage hidden  h-[80vh] sm:w-[40%] sm:flex sm:items-start sm:justify-center sm:text-[18vw] font-light text-gray-400 font-['montrealMono']">
                             {/* <span>0</span> */}
                             {/* container that hides overflow so sliding works */}
                             <span className="overflow-hidden h-[1em] leading-none">
@@ -108,7 +103,7 @@ const Projects = ({ id }) => {
 
                             <a href="">
                                 <div className=' mb-15'>
-                                    <div data-index="1" className="project h-screen flex items-center justify-center bg-gray-800">
+                                    <div ref={project} data-index="1" className="project h-screen flex items-center justify-center bg-gray-800">
                                         <h2 className="text-4xl">Project One</h2>
                                     </div>
 

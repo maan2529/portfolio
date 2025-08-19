@@ -1,19 +1,19 @@
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/all'
-import React from 'react'
+import React, { useRef } from 'react'
 import SideNav from './SideNav'
 
-const About = ({ id }) => {
 
+const About = ({ id }) => {
+    const technology = useRef(null);
     useGSAP(() => {
-        const sections = gsap.utils.toArray('.technology');
+        const sections = gsap.utils.toArray(".technology");
 
         sections.forEach((el, index) => {
             ScrollTrigger.create({
                 trigger: el,
-                // start: `top ${10 + 16 * index}%`,   // pin start point
-                start: `top 60%`, //test
+                start: `top ${10 + 16 * index}%`,   // pin start point
                 endTrigger: el.parentElement,       // parent ko end trigger banaya
                 end: "bottom bottom",                  // parent ke bottom ke bottom me 
                 scroller: "[data-scroll-container]",
@@ -64,7 +64,7 @@ const About = ({ id }) => {
                 <div className="skills">
                     <div className="pages flex flex-col gap-2">
 
-                        <div className='technology bg-black'>
+                        <div ref={technology} className='technology bg-black'>
                             <hr className=" bg-gray-100 h-[1px] opacity-30" />
                             <div className="skillspageOne  w-full  flex items-start sm:px-10 sm:py-4 ">
 

@@ -12,9 +12,9 @@ import AboutMe from './AboutMe'
 import ContactForm from './ContactForm'
 import Navigation from './Navigation'
 import SideNav from './SideNav'
+import { div } from 'motion/react-client'
 
-
-// gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger)
 
 export default function Home() {
 
