@@ -10,56 +10,88 @@ import Home from "./components/Home";
 gsap.registerPlugin(ScrollTrigger);
 
 function App() {
-  const scrollRef = useRef(null); // yahi aapka custom scroller hai
-  const locoRef = useRef(null);   // instance store karne ke liye
+  const scrollRef = useRef(null);
+  const locoRef = useRef(null);
 
   useEffect(() => {
-    // 1) Locomotive init
-    locoRef.current = new LocomotiveScroll({
-      el: scrollRef.current,
-      smooth: true,
-      multiplier: 1.5,               // speed feel tweak
-      smartphone: { smooth: true },
-      tablet: { smooth: true },
-    });
+    // Check if we're in browser environment (SSR fix)
+    if (typeof window === "undefined") return;
 
-    // 2) ScrollTrigger ko bolo ki window ki jagah ye scroller use kare
-    locoRef.current.on("scroll", ScrollTrigger.update);
+    let locomotiveScroll;
 
-    ScrollTrigger.scrollerProxy(scrollRef.current, {
-      scrollTop(value) {
-        if (arguments.length) {
-          // programmatic scroll
-          locoRef.current.scrollTo(value, { duration: 0, disableLerp: true });
-        } else {
-          return locoRef?.current?.scroll?.instance?.scroll?.y;
-        }
-      },
-      getBoundingClientRect() {
-        // viewport size
-        return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
-      },
-      // agar container par transform apply hota hai to "transform", warna "fixed"
-      pinType: scrollRef.current.style.transform ? "transform" : "fixed",
-    });
+    // Small delay to ensure DOM is ready (Vercel fix)
+    const initScroll = () => {
+      // 1) Initialize Locomotive Scroll
+      locomotiveScroll = new LocomotiveScroll({
+        el: scrollRef.current,
+        smooth: true,
+        multiplier: 1.5,
+        smartphone: { smooth: true },
+        tablet: { smooth: true },
+        // Add these for better production performance
+        resetNativeScroll: true,
+        touchMultiplier: 2,
+      });
 
-    // 3) Images/fonts load hone ke baad heights sahi kar do
-    const onRefresh = () => locoRef.current.update();
-    ScrollTrigger.addEventListener("refresh", onRefresh);
-    ScrollTrigger.refresh(); // IMPORTANT
+      locoRef.current = locomotiveScroll;
 
-    // Cleanup
+      // 2) Set up ScrollTrigger proxy
+      ScrollTrigger.scrollerProxy(scrollRef.current, {
+        scrollTop(value) {
+          return arguments.length
+            ? locomotiveScroll.scrollTo(value, { duration: 0, disableLerp: true })
+            : locomotiveScroll.scroll.instance.scroll.y;
+        },
+        getBoundingClientRect() {
+          return {
+            top: 0,
+            left: 0,
+            width: window.innerWidth,
+            height: window.innerHeight,
+          };
+        },
+        pinType: scrollRef.current?.style.transform ? "transform" : "fixed",
+      });
+
+      // 3) CRITICAL: Link Locomotive updates with ScrollTrigger
+      locomotiveScroll.on("scroll", ScrollTrigger.update);
+
+      // 4) Update locomotive when ScrollTrigger refreshes
+      ScrollTrigger.addEventListener("refresh", () => locomotiveScroll.update());
+
+      // 5) Refresh ScrollTrigger after setup
+      ScrollTrigger.refresh();
+    };
+
+    // Initialize with small delay for production
+    const timeoutId = setTimeout(initScroll, 100);
+
+    // Cleanup function
     return () => {
-      ScrollTrigger.removeEventListener("refresh", onRefresh);
-      locoRef.current?.destroy();
+      clearTimeout(timeoutId);
+      if (locomotiveScroll) {
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+        locomotiveScroll.destroy();
+      }
       locoRef.current = null;
     };
   }, []);
 
+  // Add window resize handler for better responsiveness
+  useEffect(() => {
+    const handleResize = () => {
+      if (locoRef.current) {
+        locoRef.current.update();
+        ScrollTrigger.refresh();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div ref={scrollRef} data-scroll-container>
-      
       <Home />
     </div>
   );

@@ -24,3 +24,12 @@
 html {
     scroll-behavior: smooth;
 }
+
+/* Add to your global CSS */
+[data-scroll-container] {
+  perspective: 1px;
+}
+
+.project {
+  will-change: transform;
+}

@@ -1,63 +1,97 @@
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
+import { useState, useRef, useEffect } from 'react'
+import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import React, { useState, useRef, useEffect } from "react"
+import { useGSAP } from '@gsap/react'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const Projects = ({ id }) => {
-
     const [currentNum, setCurrentNum] = useState(1)
     const numberRef = useRef(null)
     const mainDiv = useRef(null)
     const staticPage = useRef(null)
-
+    const triggersRef = useRef([]) // Store triggers for cleanup
 
     useGSAP(() => {
-        // Pin the whole section
-        ScrollTrigger.create({
-            trigger: mainDiv.current,
-            start: "top -70%",
-            end: "bottom bottom",
-            pin: staticPage.current,
-            scroller: "[data-scroll-container]",
-            pinType: "transform",
-            anticipatePin: 1,
-            refreshPriority: -1,
-            pinSpacing: false,
+        // Check if elements exist and we're in browser
+        if (!mainDiv.current || !staticPage.current || typeof window === "undefined") return;
 
-        })
+        // Clear previous triggers
+        triggersRef.current.forEach(trigger => trigger.kill());
+        triggersRef.current = [];
 
-
-        gsap.utils.toArray(".project").forEach((el, i) => {
-            ScrollTrigger.create({
-                trigger: el,
-                start: "top center",
-                onEnter: () => setCurrentNum(i + 1),
-                onEnterBack: () => setCurrentNum(i + 1),
+        // Wait a bit for Locomotive to be ready
+        const setupTriggers = () => {
+            // Pin the whole section
+            const pinTrigger = ScrollTrigger.create({
+                trigger: mainDiv.current,
+                start: "top -70%",
+                end: "bottom bottom",
+                pin: staticPage.current,
                 scroller: "[data-scroll-container]",
-            })
-        })
+                pinType: "transform",
+                anticipatePin: 1,
+                refreshPriority: -1,
+                pinSpacing: false,
+                // Add error handling
+                onRefresh: () => {
+                    console.log("Pin trigger refreshed");
+                }
+            });
 
-    }, [])
+            triggersRef.current.push(pinTrigger);
 
+            // Set up project triggers
+            const projectElements = gsap.utils.toArray(".project");
+
+            projectElements.forEach((el, i) => {
+                const projectTrigger = ScrollTrigger.create({
+                    trigger: el,
+                    start: "top center",
+                    onEnter: () => {
+                        console.log(`Entering project ${i + 1}`);
+                        setCurrentNum(i + 1);
+                    },
+                    onEnterBack: () => {
+                        console.log(`Entering back project ${i + 1}`);
+                        setCurrentNum(i + 1);
+                    },
+                    scroller: "[data-scroll-container]",
+                });
+
+                triggersRef.current.push(projectTrigger);
+            });
+        };
+
+        // Setup with delay for production
+        const timeoutId = setTimeout(setupTriggers, 200);
+
+        return () => {
+            clearTimeout(timeoutId);
+            triggersRef.current.forEach(trigger => trigger.kill());
+            triggersRef.current = [];
+        };
+    }, []);
+
+    // Number animation effect
     useEffect(() => {
         if (numberRef.current) {
-
             gsap.fromTo(
                 numberRef.current,
                 { y: "100%", opacity: 0 },
-                { y: "0%", opacity: 1, duration: 1.4, ease: "cubic-bezier(0.76, 0, 0.24, 1)" }
-            )
+                {
+                    y: "0%",
+                    opacity: 1,
+                    duration: 1.4,
+                    ease: "cubic-bezier(0.76, 0, 0.24, 1)"
+                }
+            );
         }
-    }, [currentNum])
-
+    }, [currentNum]);
 
     return (
         <section id={id} data-scroll-section>
-
             <div data-scroll data-scroll-speed={-0.7}>
-
                 <hr className="block sm:hidden bg-gray-100 h-[1px] opacity-20" />
                 <div ref={mainDiv} className="relative mainDiv bg-black text-white py-10 px-5 sm:px-8 min-h-screen">
                     {/* Top heading */}
@@ -82,8 +116,7 @@ const Projects = ({ id }) => {
                     {/* Two-column layout */}
                     <div className="flex">
                         {/* LEFT — stays pinned */}
-                        <div ref={staticPage} className="staticPage hidden  h-[80vh] sm:w-[40%] sm:flex sm:items-start sm:justify-center sm:text-[18vw] font-light text-gray-400 font-['montrealMono']">
-                            {/* <span>0</span> */}
+                        <div ref={staticPage} className="staticPage hidden h-[80vh] sm:w-[40%] sm:flex sm:items-start sm:justify-center sm:text-[18vw] font-light text-gray-400 font-['montrealMono']">
                             {/* container that hides overflow so sliding works */}
                             <span className="overflow-hidden h-[1em] leading-none">
                                 <span ref={numberRef}>
@@ -92,76 +125,67 @@ const Projects = ({ id }) => {
                             </span>
                         </div>
 
-                        {/* RIGHT — scrolls normally -> baad me isko map se karna hai */}
+                        {/* RIGHT — scrolls normally */}
                         <div className="pageOne w-full sm:w-[60%] space-y-40">
-
                             <a href="">
-                                <div className=' mb-15'>
+                                <div className='mb-15'>
                                     <div data-index="1" className="project h-screen flex items-center justify-center bg-gray-800">
                                         <h2 className="text-4xl">Project One</h2>
                                     </div>
-
-                                    <div className='sm:flex sm:justify-between sm:py-3   '>
+                                    <div className='sm:flex sm:justify-between sm:py-3'>
                                         <div className='mt-5 sm:mt-0'>
-                                            <p className='text-lg font-bold'>Web Development </p>
-                                            <h2 className='text-2xl font-semibold'>Movie Recomendation</h2>
+                                            <p className='text-lg font-bold'>Web Development</p>
+                                            <h2 className='text-2xl font-semibold'>Movie Recommendation</h2>
                                         </div>
                                         <div className='flex justify-start mt-5 sm:mt-0 sm:justify-center items-end gap-5'>
                                             <div className='px-3 py-1 rounded-full border-1 border-zinc-200 bg-transparent flex justify-center items-center text-sm w-fit h-fit'>Development</div>
-                                            <div className='px-3 py-1 rounded-full border-1 border-zinc-200  flex justify-center items-center text-sm w-fit h-fit bg-gray-500'>2025</div>
+                                            <div className='px-3 py-1 rounded-full border-1 border-zinc-200 flex justify-center items-center text-sm w-fit h-fit bg-gray-500'>2025</div>
                                         </div>
                                     </div>
                                 </div>
-
                             </a>
 
                             <a href="">
-                                <div className=' mb-15'>
+                                <div className='mb-15'>
                                     <div data-index="2" className="project h-screen flex items-center justify-center bg-gray-700">
                                         <h2 className="text-4xl">Project Two</h2>
                                     </div>
-
-                                    <div className='sm:flex sm:justify-between sm:py-3   '>
+                                    <div className='sm:flex sm:justify-between sm:py-3'>
                                         <div className='mt-5 sm:mt-0'>
-                                            <p className='text-lg font-bold'>Web Development </p>
-                                            <h2 className='text-2xl font-semibold'>Movie Recomendation</h2>
+                                            <p className='text-lg font-bold'>Web Development</p>
+                                            <h2 className='text-2xl font-semibold'>Movie Recommendation</h2>
                                         </div>
                                         <div className='flex justify-start mt-5 sm:mt-0 sm:justify-center items-end gap-5'>
                                             <div className='px-3 py-1 rounded-full border-1 border-zinc-200 bg-transparent flex justify-center items-center text-sm w-fit h-fit'>Development</div>
-                                            <div className='px-3 py-1 rounded-full border-1 border-zinc-200  flex justify-center items-center text-sm w-fit h-fit bg-gray-500'>2025</div>
+                                            <div className='px-3 py-1 rounded-full border-1 border-zinc-200 flex justify-center items-center text-sm w-fit h-fit bg-gray-500'>2025</div>
                                         </div>
                                     </div>
                                 </div>
-
                             </a>
 
                             <a href="">
-
-                                <div className=' mb-15'>
-
+                                <div className='mb-15'>
                                     <div data-index="3" className="project h-screen flex items-center justify-center bg-gray-600">
                                         <h2 className="text-4xl">Project Three</h2>
                                     </div>
-                                    <div className='sm:flex sm:justify-between sm:py-3   '>
+                                    <div className='sm:flex sm:justify-between sm:py-3'>
                                         <div className='mt-5 sm:mt-0'>
-                                            <p className='text-lg font-bold'>Web Development </p>
-                                            <h2 className='text-2xl font-semibold'>Movie Recomendation</h2>
+                                            <p className='text-lg font-bold'>Web Development</p>
+                                            <h2 className='text-2xl font-semibonal'>Movie Recommendation</h2>
                                         </div>
                                         <div className='flex justify-start mt-5 sm:mt-0 sm:justify-center items-end gap-5'>
                                             <div className='px-3 py-1 rounded-full border-1 border-zinc-200 bg-transparent flex justify-center items-center text-sm w-fit h-fit'>Development</div>
-                                            <div className='px-3 py-1 rounded-full border-1 border-zinc-200  flex justify-center items-center text-sm w-fit h-fit bg-gray-500'>2025</div>
+                                            <div className='px-3 py-1 rounded-full border-1 border-zinc-200 flex justify-center items-center text-sm w-fit h-fit bg-gray-500'>2025</div>
                                         </div>
                                     </div>
                                 </div>
                             </a>
                         </div>
                     </div>
-
                 </div>
             </div>
+        </section>
+    );
+};
 
-        </section >
-    )
-}
-
-export default Projects
+export default Projects;

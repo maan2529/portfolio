@@ -7,7 +7,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-
+  optimizeDeps: { 
+    include: ['gsap', 'locomotive-scroll']
+  },
   theme: {
     extend: {
       colors: {
