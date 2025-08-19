@@ -18,7 +18,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default function Home() {
 
-    const [sideNav, setSideNav] = useState(true)
+    const [sideNav, setSideNav] = useState(false)
 
     return (
 
@@ -32,6 +32,7 @@ export default function Home() {
             >
                 {sideNav ? "X" : "≡"}
             </button> */}
+
 
             <button
                 onClick={() => setSideNav(prev => !prev)}
