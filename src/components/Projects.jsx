@@ -9,6 +9,7 @@ const Projects = ({ id }) => {
 
     const [currentNum, setCurrentNum] = useState(1)
     const numberRef = useRef(null)
+
     const mainDiv = useRef(null)
     const staticPage = useRef(null)
 
@@ -29,7 +30,7 @@ const Projects = ({ id }) => {
         })
 
 
-        gsap.utils.toArray(".project").forEach((el, i) => {
+        gsap.utils.toArray('.project').forEach((el, i) => {
             ScrollTrigger.create({
                 trigger: el,
                 start: "top center",
@@ -39,7 +40,7 @@ const Projects = ({ id }) => {
             })
         })
 
-    }, [])
+    }, { scope: mainDiv })
 
     useEffect(() => {
         if (numberRef.current) {
@@ -47,7 +48,10 @@ const Projects = ({ id }) => {
             gsap.fromTo(
                 numberRef.current,
                 { y: "100%", opacity: 0 },
+
                 { y: "0%", opacity: 1, duration: 1.4, ease: "cubic-bezier(0.76, 0, 0.24, 1)" }
+
+              
             )
         }
     }, [currentNum])
@@ -97,7 +101,7 @@ const Projects = ({ id }) => {
 
                             <a href="">
                                 <div className=' mb-15'>
-                                    <div data-index="1" className="project h-screen flex items-center justify-center bg-gray-800">
+                                    <div ref={project} data-index="1" className="project h-screen flex items-center justify-center bg-gray-800">
                                         <h2 className="text-4xl">Project One</h2>
                                     </div>
 
