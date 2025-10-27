@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from "react";
+import { useScroll } from '../context/ScrollProvider';
 
 const Navigation = () => {
     const [time, setTime] = useState("");
+    const { locomotive } = useScroll();
+    
+
     const handleScroll = (id) => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.scrollIntoView({ behavior: "smooth" });
+        if (locomotive) {
+            // Use Locomotive Scroll for smooth scrolling
+            locomotive.scrollTo(`#${id}`, {
+                duration: 1000,
+                easing: [0.25, 0.0, 0.35, 1.0]
+            });
+        } else {
+            // Fallback to native scroll
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth" });
+            }
         }
     };
     useEffect(() => {
@@ -38,26 +51,24 @@ const Navigation = () => {
                             Menu
                         </h3>
                         <ul className="space-y-2">
-                            <li><a
-                                
-                                rel="noopener noreferrer"
-                                href="#hero" className="hover:text-black">Home</a></li>
-                            <li><a
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                href="#services" className="hover:text-black">Services</a></li>
-                            <li><a
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                href="#works" className="hover:text-black">Works</a></li>
-                            <li><a
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                href="#about" className="hover:text-black">About</a></li>
-                            <li><a
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                href="#contact" className="hover:text-black">Contact</a></li>
+                            <li><button
+                                onClick={() => handleScroll('hero')}
+                                className="hover:text-black text-left">Home</button></li>
+                            <li><button
+                                onClick={() => handleScroll('about')}
+                                className="hover:text-black text-left">Services</button></li>
+                            <li><button
+                                onClick={() => handleScroll('projects')}
+                                className="hover:text-black text-left">Projects</button></li>
+                            <li><button
+                                onClick={() => handleScroll('skills')}
+                                className="hover:text-black text-left">Skills</button></li>
+                            <li><button
+                                onClick={() => handleScroll('aboutme')}
+                                className="hover:text-black text-left">About</button></li>
+                            <li><button
+                                onClick={() => handleScroll('contact')}
+                                className="hover:text-black text-left">Contact</button></li>
                         </ul>
                     </div>
 
@@ -98,7 +109,7 @@ const Navigation = () => {
             {/* Scroll to Top Button */}
             <div className="fixed bottom-6 right-6">
                 <button
-                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    onClick={() => handleScroll('hero')}
                     className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center shadow-md hover:bg-gray-400 transition"
                 >
                     ↑

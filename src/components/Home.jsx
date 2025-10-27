@@ -50,7 +50,7 @@ export default function Home() {
                 </svg>
             </button>
 
-            <SideNav isOpen={sideNav} />
+            <SideNav isOpen={sideNav} setSideNav={setSideNav} />
 
             <Hero id={"hero"} />
             <About id={"about"} />

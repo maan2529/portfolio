@@ -21,7 +21,7 @@ const Projects = ({ id }) => {
         // Pin the left section
         const pinTrigger = ScrollTrigger.create({
             trigger: mainDiv.current,
-            start: "top -70%",
+            start: "top -40%",
             end: "bottom bottom",
             pin: staticPage.current,
             pinSpacing: false,

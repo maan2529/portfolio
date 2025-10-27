@@ -1,6 +1,23 @@
 import React from 'react'
+import { useScroll } from '../context/ScrollProvider';
 
 const Hero = ({ id }) => {
+    const { locomotive } = useScroll();
+    const handleScroll = (id) => {
+        if (locomotive) {
+            // Use Locomotive Scroll for smooth scrolling
+            locomotive.scrollTo(`#${id}`, {
+                duration: 1000,
+                easing: [0.25, 0.0, 0.35, 1.0]
+            });
+        } else {
+            // Fallback to native scroll
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+    };
     return (
         <section id={id} data-scroll-section className=" bg-[rgb(232,232,226)] min-h-screen px-5 py-2 flex flex-col ">
 
@@ -16,26 +33,22 @@ const Hero = ({ id }) => {
                     {/* Right Nav Links */}
                     <div className="  sm:flex sm:gap-6">
                         <ul className="space-y-2 sm:flex leading-5 sm:gap-4">
-                            <li><a
-
-                                rel="noopener noreferrer"
-                                href="#hero" className="hover:text-black">Projects</a></li>
-                            <li><a
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                href="#services" className="hover:text-black">Skills</a></li>
-                            <li><a
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                href="#works" className="hover:text-black">About Me</a></li>
+                            <li><button
+                                onClick={() => handleScroll('projects')}
+                                className="hover:text-black">Projects</button></li>
+                            <li><button
+                                onClick={() => handleScroll('skills')}
+                                className="hover:text-black">Skills</button></li>
+                            <li><button
+                                onClick={() => handleScroll('aboutme')}
+                                className="hover:text-black">About Me</button></li>
                             {/* <li><a
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     href="#about" className="hover:text-black">About</a></li> */}
-                            <li><a
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                href="#contact" className="hover:text-black">Contact</a></li>
+                            <li><button
+                                onClick={() => handleScroll('contact')}
+                                className="hover:text-black">Contact</button></li>
                         </ul>
                     </div>
                 </div>
