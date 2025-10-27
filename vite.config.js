@@ -1,24 +1,24 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [
     react(),
-    tailwindcss(),
   ],
   build: {
-    rollupOptions: {
-      external: ['react', 'react-dom', 'react-icons'],
-      onwarn(warning, warn) {
-        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
-          return
-        }
-        warn(warning)
-      }
-    }
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
   },
   optimizeDeps: {
-    include: ['react', 'react-dom']
-  }
+    include: ['react', 'react-dom'],
+    esbuildOptions: {
+      target: 'es2020',
+    },
+  },
+  server: {
+    fs: {
+      strict: false,
+    },
+  },
 })
