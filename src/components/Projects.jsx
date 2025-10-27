@@ -2,126 +2,66 @@ import { useState, useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
+import { useScroll } from '../context/ScrollProvider'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const Projects = ({ id, locomotiveReady }) => {
+const Projects = ({ id }) => {
     const [currentNum, setCurrentNum] = useState(1)
     const numberRef = useRef(null)
     const mainDiv = useRef(null)
     const staticPage = useRef(null)
-    const triggersRef = useRef([])
-    const setupComplete = useRef(false)
+    const { isReady } = useScroll()
 
     useGSAP(() => {
-        // Wait for locomotive to be ready
-        if (!locomotiveReady || setupComplete.current) return;
+        if (!isReady || !mainDiv.current || !staticPage.current) return
 
-        if (!mainDiv.current || !staticPage.current || typeof window === "undefined") {
-            console.log("❌ Projects: Elements not ready");
-            return;
-        }
+        const cleanupFunctions = []
 
-        console.log("🚀 PROJECTS: Setting up with locomotive ready");
-
-        const setupTriggers = () => {
-            try {
-                setupComplete.current = true;
-
-                // Clear existing
-                triggersRef.current.forEach(trigger => trigger.kill());
-                triggersRef.current = [];
-
-                // Force height recalculation
-                const forceLayout = () => {
-                    mainDiv.current.style.transform = 'translateZ(0)';
-                    staticPage.current.style.transform = 'translateZ(0)';
-
-                    // Create pin trigger with explicit measurements
-                    const triggerRect = mainDiv.current.getBoundingClientRect();
-                    const pinRect = staticPage.current.getBoundingClientRect();
-
-                    console.log("📏 Trigger height:", triggerRect.height);
-                    console.log("📏 Pin height:", pinRect.height);
-
-                    const pinTrigger = ScrollTrigger.create({
-                        trigger: mainDiv.current,
-                        start: "top -70%",
-                        end: "bottom bottom",
-                        pin: staticPage.current,
-                        scroller: "[data-scroll-container]",
-                        pinType: "transform",
-                        anticipatePin: 1,
-                        refreshPriority: -1,
-                        pinSpacing: false,
-                        // Force refresh on creation
-                        immediateRender: false,
-                        onPin: () => {
-                            console.log("📌 PROJECTS PINNED! ✅");
-                            staticPage.current.style.zIndex = "10";
-                        },
-                        onUnpin: () => {
-                            console.log("📌 PROJECTS UNPINNED! ✅");
-                        },
-                        onRefresh: () => {
-                            console.log("🔄 Projects pin refreshed");
-                        }
-                    });
-
-                    triggersRef.current.push(pinTrigger);
-
-                    // Project number triggers
-                    setTimeout(() => {
-                        const projectElements = document.querySelectorAll(".project");
-                        console.log(`🎯 Creating triggers for ${projectElements.length} projects`);
-
-                        projectElements.forEach((el, i) => {
-                            const rect = el.getBoundingClientRect();
-                            console.log(`📏 Project ${i + 1} height:`, rect.height);
-
-                            const projectTrigger = ScrollTrigger.create({
-                                trigger: el,
-                                start: "top center",
-                                scroller: "[data-scroll-container]",
-                                onEnter: () => {
-                                    console.log(`🎯 ENTERING PROJECT ${i + 1} ✅`);
-                                    setCurrentNum(i + 1);
-                                },
-                                onEnterBack: () => {
-                                    console.log(`🎯 ENTERING BACK PROJECT ${i + 1} ✅`);
-                                    setCurrentNum(i + 1);
-                                },
-                            });
-
-                            triggersRef.current.push(projectTrigger);
-                        });
-
-                        // Force final refresh
-                        setTimeout(() => {
-                            ScrollTrigger.refresh();
-                            console.log("✅ PROJECTS SETUP COMPLETE");
-                        }, 200);
-
-                    }, 300);
-                };
-
-                // Execute with delay
-                setTimeout(forceLayout, 100);
-
-            } catch (error) {
-                console.error("❌ Projects setup error:", error);
-                setupComplete.current = false;
+        // Pin the left section
+        const pinTrigger = ScrollTrigger.create({
+            trigger: mainDiv.current,
+            start: "top -70%",
+            end: "bottom bottom",
+            pin: staticPage.current,
+            pinSpacing: false,
+            anticipatePin: 1,
+            refreshPriority: -1,
+            immediateRender: false,
+            onEnter: () => {
+                staticPage.current.style.zIndex = "10"
+            },
+            onLeave: () => {
+                staticPage.current.style.removeProperty('z-index')
+            },
+            onLeaveBack: () => {
+                staticPage.current.style.removeProperty('z-index')
             }
-        };
+        })
 
-        setupTriggers();
+        cleanupFunctions.push(() => pinTrigger.kill())
 
+        // Project number triggers
+        const projectElements = gsap.utils.toArray('.project', mainDiv.current)
+        projectElements.forEach((el, index) => {
+            const trigger = ScrollTrigger.create({
+                trigger: el,
+                start: "top center",
+                onEnter: () => setCurrentNum(index + 1),
+                onEnterBack: () => setCurrentNum(index + 1)
+            })
+
+            cleanupFunctions.push(() => trigger.kill())
+        })
+
+        // Cleanup function
         return () => {
-            triggersRef.current.forEach(trigger => trigger.kill());
-            triggersRef.current = [];
-            setupComplete.current = false;
-        };
-    }, [locomotiveReady]); // Depend on locomotiveReady
+            cleanupFunctions.forEach(cleanup => cleanup())
+            if (staticPage.current) {
+                staticPage.current.style.removeProperty('z-index')
+            }
+        }
+    }, [isReady])
 
     // Number animation
     useEffect(() => {
@@ -135,9 +75,9 @@ const Projects = ({ id, locomotiveReady }) => {
                     duration: 1.4,
                     ease: "cubic-bezier(0.76, 0, 0.24, 1)"
                 }
-            );
+            )
         }
-    }, [currentNum]);
+    }, [currentNum])
 
     return (
         <section id={id} data-scroll-section>
@@ -234,7 +174,7 @@ const Projects = ({ id, locomotiveReady }) => {
                 </div>
             </div>
         </section>
-    );
-};
+    )
+}
 
-export default Projects;
+export default Projects

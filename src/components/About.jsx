@@ -2,115 +2,52 @@ import { useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
+import { useScroll } from '../context/ScrollProvider'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const About = ({ id, locomotiveReady }) => {
-    const triggersRef = useRef([])
-    const setupComplete = useRef(false)
+const About = ({ id }) => {
+    const sectionRef = useRef(null)
+    const { isReady } = useScroll()
 
     useGSAP(() => {
-        // Wait for locomotive to be ready
-        if (!locomotiveReady || setupComplete.current) return;
+        if (!isReady) return
 
-        if (typeof window === "undefined") {
-            console.log("❌ ABOUT: Not in browser environment");
-            return;
-        }
+        const sections = gsap.utils.toArray('.technology', sectionRef.current)
+        if (!sections.length) return
 
-        console.log("🚀 ABOUT: Setting up with locomotive ready");
+        sections.forEach((el, index) => {
+            // Optimal staggered pinning positions for smooth user experience
+            const pinPositions = [10, 25, 0]; // 1st: early, 2nd: mid, 3rd: later
+            const startPosition = pinPositions[index] || 10;
 
-        const setupTriggers = () => {
-            try {
-                setupComplete.current = true;
+            ScrollTrigger.create({
+                trigger: el,
+                start: `top ${startPosition}%`,
+                endTrigger: el.parentElement,
+                end: 'bottom bottom',
+                pin: el,
+                pinSpacing: false,
+                anticipatePin: 0, // Precise timing - no anticipation
+                refreshPriority: -1,
+                immediateRender: false,
+                onEnter: () => {
+                    el.style.zIndex = `${20 + index}`
+                },
+                onLeaveBack: () => {
+                    el.style.zIndex = `${20 + index}`
+                }
+            })
+        })
 
-                // Clear previous triggers
-                triggersRef.current.forEach(trigger => trigger.kill());
-                triggersRef.current = [];
-
-                const forceLayout = () => {
-                    const sections = document.querySelectorAll('.technology');
-
-                    if (sections.length === 0) {
-                        console.log("❌ ABOUT: No technology sections found");
-                        return;
-                    }
-
-                    console.log(`🎯 ABOUT: Found ${sections.length} technology sections`);
-
-                    sections.forEach((el, index) => {
-                        // Force layout calculation
-                        el.style.transform = 'translateZ(0)';
-
-                        // Check parent element
-                        if (!el.parentElement) {
-                            console.warn(`❌ ABOUT: Parent element not found for section ${index}`);
-                            return;
-                        }
-
-                        // Get measurements
-                        const elRect = el.getBoundingClientRect();
-                        const parentRect = el.parentElement.getBoundingClientRect();
-
-                        console.log(`📏 ABOUT: Section ${index} height:`, elRect.height);
-                        console.log(`📏 ABOUT: Parent ${index} height:`, parentRect.height);
-
-                        const trigger = ScrollTrigger.create({
-                            trigger: el,
-                            start: `top ${10 + 16 * index}%`,
-                            endTrigger: el.parentElement,
-                            end: "bottom bottom",
-                            scroller: "[data-scroll-container]",
-                            pin: el,
-                            pinType: "transform",
-                            anticipatePin: 1,
-                            refreshPriority: -1,
-                            pinSpacing: false,
-                            immediateRender: false,
-                            onPin: () => {
-                                console.log(`📌 ABOUT SECTION ${index} PINNED! ✅`);
-                                el.style.zIndex = `${20 + index}`;
-                            },
-                            onUnpin: () => {
-                                console.log(`📌 ABOUT SECTION ${index} UNPINNED! ✅`);
-                            },
-                            onRefresh: () => {
-                                console.log(`🔄 ABOUT: Technology section ${index} refreshed`);
-                            }
-                        });
-
-                        triggersRef.current.push(trigger);
-                    });
-
-                    // Force final refresh after all triggers are created
-                    setTimeout(() => {
-                        ScrollTrigger.refresh();
-                        console.log(`✅ ABOUT SETUP COMPLETE - ${triggersRef.current.length} triggers created`);
-                    }, 400);
-                };
-
-                // Execute with delay to ensure DOM is stable
-                setTimeout(forceLayout, 200);
-
-            } catch (error) {
-                console.error("❌ ABOUT: Setup error:", error);
-                setupComplete.current = false;
-            }
-        };
-
-        setupTriggers();
-
-        return () => {
-            triggersRef.current.forEach(trigger => trigger.kill());
-            triggersRef.current = [];
-            setupComplete.current = false;
-        };
-    }, [locomotiveReady]); // Depend on locomotiveReady
+        ScrollTrigger.refresh()
+    }, [isReady])
 
     return (
         <section
             id={id}
             data-scroll-section
+            ref={sectionRef}
             className='rounded-tl-4xl rounded-tr-4xl bg-black text-white py-10 px-8 sm:pb-50 font-["DM sans 9pt"]'
         >
             <div>
@@ -247,7 +184,7 @@ const About = ({ id, locomotiveReady }) => {
                 </div>
             </div>
         </section>
-    );
-};
+    )
+}
 
-export default About;
+export default About

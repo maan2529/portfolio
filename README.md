@@ -1,12 +1,90 @@
-# React + Vite
+# Portfolio Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, performant portfolio website built with React, Vite, and optimized scroll animations.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Smooth Scrolling**: Powered by Locomotive Scroll with GSAP ScrollTrigger integration
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Performance Optimized**: Efficient scroll management with centralized context
+- **Modern Stack**: React 19, Vite, GSAP, Tailwind CSS
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Frontend**: React 19, Vite
+- **Styling**: Tailwind CSS 4
+- **Animations**: GSAP with ScrollTrigger
+- **Smooth Scrolling**: Locomotive Scroll
+- **Build Tool**: Vite
+
+## Scroll Setup
+
+The project uses a centralized scroll management system:
+
+1. **ScrollProvider Context** (`src/context/ScrollProvider.jsx`): Manages Locomotive Scroll and ScrollTrigger globally
+2. **Centralized Configuration**: All ScrollTrigger instances inherit the same scroller and settings
+3. **Clean Components**: Components use `useScroll()` hook for scroll state without complex setup logic
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Installation
+
+```bash
+npm install
+```
+
+### Development
+
+```bash
+npm run dev
+```
+
+### Build
+
+```bash
+npm run build
+```
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+## Project Structure
+
+```
+src/
+├── context/
+│   └── ScrollProvider.jsx    # Centralized scroll management
+├── components/
+│   ├── About.jsx            # About section with pinned elements
+│   ├── Projects.jsx         # Projects section with horizontal scroll
+│   ├── Hero.jsx             # Hero section
+│   └── ...
+└── App.jsx                  # Main app with ScrollProvider
+```
+
+## ScrollTrigger Integration
+
+All scroll animations are managed through the ScrollProvider context, which:
+
+- Initializes Locomotive Scroll once
+- Sets up ScrollTrigger proxy for seamless integration
+- Provides `isReady` state for component synchronization
+- Handles cleanup automatically
+- Supports responsive breakpoints
+
+## Deployment
+
+The setup is optimized for hosting platforms and includes:
+
+- Single refresh cycle to prevent layout thrashing
+- Proper cleanup to avoid memory leaks
+- SSR-compatible initialization
+- Optimized bundle size (removed unused libraries)
