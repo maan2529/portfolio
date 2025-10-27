@@ -46,9 +46,7 @@ const Hero = ({ id }) => {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     href="#about" className="hover:text-black">About</a></li> */}
-                            <li><button
-                                onClick={() => handleScroll('contact')}
-                                className="hover:text-black">Contact</button></li>
+
                         </ul>
                     </div>
                 </div>
@@ -72,7 +70,10 @@ const Hero = ({ id }) => {
                             Open to job opportunities worldwide. Passionate about building polished,
                             intuitive, and thoughtful digital experiences that leave a mark.
                         </p>
-                        <button className=" textAndbtn hidden sm:block mt-6 bg-[#383632] text-white px-6 py-4 rounded-full text-sm font-semibold flex items-center gap-2">
+                        <button
+
+                            onClick={() => handleScroll('contact')}
+                            className=" textAndbtn hidden sm:block mt-6 bg-[#383632] text-white px-6 py-4 rounded-full text-sm font-semibold flex items-center gap-2">
                             CONTACT
                             <i className="ri-arrow-right-up-line"></i>
                         </button>
@@ -107,7 +108,7 @@ const Hero = ({ id }) => {
                 </div>
 
             </div>
-        </section>
+        </section >
     )
 }
 
