@@ -18,7 +18,7 @@ const About = ({ id }) => {
 
         sections.forEach((el, index) => {
             // Optimal staggered pinning positions for smooth user experience
-            const pinPositions = [10, 25, 0]; // 1st: early, 2nd: mid, 3rd: later
+            const pinPositions = [10, 25, 40]; // 1st: early, 2nd: mid, 3rd: later
             const startPosition = pinPositions[index] || 10;
 
             ScrollTrigger.create({
@@ -62,9 +62,7 @@ const About = ({ id }) => {
                                 <p className="text-xl mb-3 sm:w-[10%] uppercase">(Services)</p>
                                 <div className='sm:w-[90%] pl-10'>
                                     <p className="sm:w-[80%] sm:text-lg">
-                                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veritatis
-                                        tempora ipsam voluptas eligendi dolorem aspernatur illo aperiam deleniti
-                                        sed quo dolor id cumque quidem, omnis repellat ea architecto! At, in?
+                                        I build modern, responsive, and scalable web applications. From crafting clean frontend interfaces to developing secure backend APIs, I focus on delivering smooth, efficient, and reliable digital experiences.
                                     </p>
                                 </div>
                             </div>
@@ -86,8 +84,7 @@ const About = ({ id }) => {
                                     </div>
 
                                     <p className='text-sm leading-tight text-gray-300 pb-4 sm:w-[55%] font-semibold sm:leading-5'>
-                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus?
-                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur, minus?
+                                        I specialize in building complete web solutions — from dynamic frontends to powerful backends and databases. My focus is on writing clean, efficient code and creating applications that are scalable, secure, and easy to maintain.
                                     </p>
 
                                     <div>

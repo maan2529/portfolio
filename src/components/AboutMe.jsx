@@ -1,5 +1,5 @@
 import React from "react";
-
+import hemant2 from "../assets/myImages/hemant2.png";
 const AboutMe = ({ id }) => {
     return (
         <section id={id} data-scroll-section className="bg-black text-white px-6 sm:px-10 lg:px-20 py-16">
@@ -8,7 +8,7 @@ const AboutMe = ({ id }) => {
                 {/* LEFT IMAGE */}
                 <div className="w-full lg:w-[40%] flex justify-center">
                     <img
-                        src="https://images.unsplash.com/photo-1754951661102-341dfb58bd26?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyNXx8fGVufDB8fHx8fA%3D%3D"
+                        src={hemant2}
                         alt="About Me"
                         className="rounded-xl object-cover w-full max-w-md lg:max-w-full"
                     />
@@ -25,25 +25,19 @@ const AboutMe = ({ id }) => {
                     {/* ABOUT ME SECTION */}
                     <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 text-gray-300">
                         {/* LEFT SMALL TITLE */}
-                        <div className="sm:w-[20%] text-sm tracking-wider uppercase text-gray-400">
+                        <div className="sm:w-[20%] text-lg font-bold tracking-wider uppercase text-gray-400">
                             (About Me)
                         </div>
 
                         {/* RIGHT PARAGRAPH */}
-                        <div className="sm:w-[80%] space-y-4 leading-relaxed text-gray-300">
+                        <div className="sm:w-[80%] space-y-4 leading-relaxed text-gray-300 text-lg">
                             <p>
-                                I am a passionate Software Engineer with a knack for building
-                                full-stack web applications using modern technologies like
-                                Next.js and Tailwind CSS. My journey in tech began with a
-                                curiosity for solving real-world problems through innovative
-                                solutions, which evolved into a love for crafting user-centric
-                                digital experiences.
+                                I’m a 2025 Computer Science graduate and a passionate Software Engineer who loves building full-stack web applications using modern technologies like React, Node.js, Express, and MongoDB.
+
+                                What started as a curiosity to understand how websites work turned into a strong interest in developing efficient, scalable, and user-focused digital products. I enjoy transforming ideas into real-world solutions that not only function well but also provide a smooth user experience.
                             </p>
                             <p>
-                                Beyond coding, I thrive in collaborative environments and enjoy
-                                tackling challenging problems with creative solutions. I aim to
-                                contribute to impactful projects that make a difference in
-                                users' lives.
+                                Beyond coding, I enjoy collaborating with teams, learning new technologies, and taking on challenges that push me to grow as a developer. My goal is to contribute to impactful projects where I can build clean, reliable systems and continue improving my craft every day.
                             </p>
                         </div>
                     </div>

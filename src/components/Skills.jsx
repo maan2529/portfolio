@@ -1,6 +1,6 @@
 import React from "react"
 
-const Skills = ({id}) => {
+const Skills = ({ id }) => {
     return (
         <section id={id} data-scroll-section className="bg-black text-white py-16 sm:pt-15 px-14 lg:px-20">
 
@@ -17,8 +17,6 @@ const Skills = ({id}) => {
 
                 {/* RIGHT SKILLS */}
                 <div className="flex-1 text-gray-400 w-full lg:w-[40%]">
-                    {/* Title */}
-
 
                     {/* Skills Grid */}
                     <div className="grid grid-cols-3 sm:grid-cols-3 gap-10 text-gray-400 text-md">
@@ -27,16 +25,16 @@ const Skills = ({id}) => {
                         <div>
                             <h3 className="hidden lg:block font-semibold text-white mb-4">Languages & Tools</h3>
                             <ul className="space-y-2">
-                                <li>Python</li>
-                                <li>SQL</li>
-                                <li>C++</li>
-                                <li>Java</li>
-                                <li>Typescript</li>
+
                                 <li>JavaScript</li>
+                                <li>C++</li>
+                                <li>Typescript</li>
                                 <li>Git</li>
-                                <li>Postman</li>
-                                <li>Docker</li>
-                                <li>Firebase</li>
+                                <li>Github</li>
+                                <li>HTML</li>
+                                <li>CSS</li>
+                                {/* <li>Docker</li>
+                                <li>Firebase</li> */}
                             </ul>
                         </div>
 
@@ -47,10 +45,9 @@ const Skills = ({id}) => {
                                 <li>React</li>
                                 <li>Node.js</li>
                                 <li>Express.js</li>
-                                <li>Flask</li>
                                 <li>Bootstrap</li>
-                                <li>jQuery</li>
                                 <li>TailwindCSS</li>
+                                <li>Tanstack Query</li>
                                 <li>Framer Motion</li>
                                 <li>GSAP</li>
                             </ul>
@@ -61,10 +58,8 @@ const Skills = ({id}) => {
                             <h3 className="hidden lg:block font-semibold text-white mb-4">Core CS Concepts</h3>
                             <ul className="space-y-2">
                                 <li>DSA</li>
-                                <li>DBMS</li>
                                 <li>OOP</li>
                                 <li>Operating Systems</li>
-                                <li>System Design</li>
                             </ul>
                         </div>
 

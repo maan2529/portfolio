@@ -21,7 +21,7 @@ const Projects = ({ id }) => {
         // Pin the left section
         const pinTrigger = ScrollTrigger.create({
             trigger: mainDiv.current,
-            start: "top -40%",
+            start: "top -60%",
             end: "bottom bottom",
             pin: staticPage.current,
             pinSpacing: false,
@@ -152,7 +152,7 @@ const Projects = ({ id }) => {
                                 </div>
                             </a>
 
-                            <a href="">
+                            {/* <a href="">
                                 <div className='mb-15'>
                                     <div data-index="3" className="project h-screen flex items-center justify-center bg-gray-600">
                                         <h2 className="text-4xl">Project Three</h2>
@@ -168,7 +168,7 @@ const Projects = ({ id }) => {
                                         </div>
                                     </div>
                                 </div>
-                            </a>
+                            </a> */}
                         </div>
                     </div>
                 </div>

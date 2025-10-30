@@ -1,5 +1,6 @@
 import React from 'react'
 import { useScroll } from '../context/ScrollProvider';
+import hemant1 from '../assets/myImages/hemant1.png'
 
 const Hero = ({ id }) => {
     const { locomotive } = useScroll();
@@ -19,15 +20,13 @@ const Hero = ({ id }) => {
         }
     };
     return (
-        <section id={id} data-scroll-section className=" bg-[rgb(232,232,226)] min-h-screen px-5 py-2 flex flex-col ">
-
-
+        <section id={id} data-scroll-section className=" bg-[rgb(232,232,226)] min-h-screen px-5 sm:px-15 py-2 flex flex-col ">
 
             <div data-scroll data-scroll-speed={-2.4}>
                 <div className="topnav z-12 flex justify-between text-lg text-[#5d5956]  py-5  font-semibold ">
                     {/* Left Text */}
                     <div className="w-35 sm:w-100">
-                        <p>Web Developer & Designer</p>
+                        <p>Web Developer | MERN</p>
 
                     </div>
                     {/* Right Nav Links */}
@@ -67,15 +66,14 @@ const Hero = ({ id }) => {
                     {/* Right - Paragraph + Button */}
                     <div className="mt-5 sm:mt-0 sm:max-w-[350px] overflow-y-hidden">
                         <p className="textAndbtn text-gray-600 text-base leading-relaxed text-xl font-normal">
-                            Open to job opportunities worldwide. Passionate about building polished,
-                            intuitive, and thoughtful digital experiences that leave a mark.
+                            I love building things that work beautifully — from responsive UIs to powerful backend systems.
                         </p>
                         <button
 
                             onClick={() => handleScroll('contact')}
                             className=" textAndbtn hidden sm:block mt-6 bg-[#383632] text-white px-6 py-4 rounded-full text-sm font-semibold flex items-center gap-2">
                             CONTACT
-                            <i className="ri-arrow-right-up-line"></i>
+                            <i class="ri-arrow-right-up-long-line"></i>
                         </button>
                     </div>
                     {/* Profile Image */}
@@ -83,9 +81,9 @@ const Hero = ({ id }) => {
                     <div className="hidden flex-1 sm:flex justify-center items-center sm:ml-[12vw]  ">
                         <div className="overflow-y-hidden w-[15vw] h-[15vw]   flex items-center justify-center">
                             <img
-                                src="https://images.unsplash.com/photo-1622151834677-70f982c9adef?q=80&w=2886&auto=format&fit=crop&ixlib=rb-4.1.0"
+                                src={hemant1}
                                 alt="profile"
-                                className="myImage w-full h-full object-cover  rounded-lg"
+                                className="myImage w-full h-full object-cover  rounded-lg object-top"
                             />
                         </div>
                     </div>
@@ -99,8 +97,8 @@ const Hero = ({ id }) => {
                         </button>
                         <div className="textAndbtn self-end text-right text-lg">
                             <p className=" text-gray-500">AVAILABLE FOR</p>
-                            <p className=" text-gray-500">WORK</p>
-                            <p className="text-4xl font-bold">JUNE</p>
+                            {/* <p className=" text-gray-500">WORK</p> */}
+                            <p className="text-4xl font-bold">WORK</p>
                         </div>
                     </div>
 
