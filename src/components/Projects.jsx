@@ -116,15 +116,17 @@ const Projects = ({ id }) => {
 
                         {/* RIGHT — scrolls normally */}
                         <div className="pageOne w-full sm:w-[60%] space-y-40">
-                            <a href="">
+                            <a target='_blank' href="https://trip-booking-x1lh.onrender.com">
                                 <div className='mb-15'>
                                     <div data-index="1" className="project h-screen flex items-center justify-center bg-gray-800">
-                                        <h2 className="text-4xl">Project One</h2>
+                                        {/* <h2 className="text-4xl">Project One</h2> */}
+                                        <img className='w-[100%] h-[100%]' src="/FlightLogDepartureTicketAnimation.gif" alt="Flight Ticket animation" />
+
                                     </div>
                                     <div className='sm:flex sm:justify-between sm:py-3'>
                                         <div className='mt-5 sm:mt-0'>
-                                            <p className='text-lg font-bold'>Web Development</p>
-                                            <h2 className='text-2xl font-semibold'>Movie Recommendation</h2>
+                                            <p className='text-lg font-bold'>Web Development </p>
+                                            <h2 className='text-2xl font-semibold'>Trip and Ticket booking system</h2>
                                         </div>
                                         <div className='flex justify-start mt-5 sm:mt-0 sm:justify-center items-end gap-5'>
                                             <div className='px-3 py-1 rounded-full border-1 border-zinc-200 bg-transparent flex justify-center items-center text-sm w-fit h-fit'>Development</div>
@@ -134,14 +136,15 @@ const Projects = ({ id }) => {
                                 </div>
                             </a>
 
-                            <a href="">
+                            <a target='_blank' href="https://github.com/maan2529/chat-gpt-clone">
                                 <div className='mb-15'>
                                     <div data-index="2" className="project h-screen flex items-center justify-center bg-gray-700">
-                                        <h2 className="text-4xl">Project Two</h2>
+                                        {/* <h2 className="text-4xl">Project Two</h2> */}
+                                        <img className='w-[100%] h-[100%]' src="/genAiChatApp.gif" alt="Flight Ticket animation" />
                                     </div>
                                     <div className='sm:flex sm:justify-between sm:py-3'>
                                         <div className='mt-5 sm:mt-0'>
-                                            <p className='text-lg font-bold'>Web Development</p>
+                                            <p className='text-lg font-bold'>Web Development & GEN AI</p>
                                             <h2 className='text-2xl font-semibold'>Movie Recommendation</h2>
                                         </div>
                                         <div className='flex justify-start mt-5 sm:mt-0 sm:justify-center items-end gap-5'>

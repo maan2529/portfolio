@@ -1,6 +1,14 @@
 import React from 'react'
 import { useScroll } from '../context/ScrollProvider';
 import hemant1 from '../assets/myImages/hemant1.png'
+import FlyingPosters from './FlyingPosters'
+
+const items = [
+    hemant1,
+    'https://picsum.photos/500/500?grayscale',
+    'https://picsum.photos/600/600?grayscale',
+    'https://picsum.photos/400/400?grayscale'
+];
 
 const Hero = ({ id }) => {
     const { locomotive } = useScroll();
@@ -79,12 +87,15 @@ const Hero = ({ id }) => {
                     {/* Profile Image */}
 
                     <div className="hidden flex-1 sm:flex justify-center items-center sm:ml-[12vw]  ">
-                        <div className="overflow-y-hidden w-[15vw] h-[15vw]   flex items-center justify-center">
-                            <img
+                        <div className="overflow-y-hidden w-[35vw] h-[20vw]   flex items-center justify-center">
+                            {/* <img
                                 src={hemant1}
                                 alt="profile"
                                 className="myImage w-full h-full object-cover  rounded-lg object-top"
-                            />
+                            /> */}
+                            <div style={{ height: '600px', position: 'relative' }}>
+                                <FlyingPosters items={items} />
+                            </div>
                         </div>
                     </div>
 
