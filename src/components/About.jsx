@@ -90,17 +90,17 @@ const About = ({ id }) => {
                                     <div>
                                         <div className='flex gap-4 items-center sm:text-2xl'>
                                             <p className='text-zinc-400 font-bold text-xl'>01</p>
-                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>React, Node.js, Express.js</h1>
+                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>HTML, CSS,JavaScript, React, Tailwind CSS, Bootstrap </h1>
                                         </div>
                                         <hr className="my-4 bg-gray-100 h-[1px] opacity-30" />
                                         <div className='flex gap-4 items-center'>
                                             <p className='text-zinc-400 font-bold text-xl'>02</p>
-                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>MongoDB, PostgreSQL</h1>
+                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>Node.js, Express.js, MongoDB </h1>
                                         </div>
                                         <hr className="my-4 bg-gray-100 h-[1px] opacity-30" />
                                         <div className='flex gap-4 items-center'>
                                             <p className='text-zinc-400 font-bold text-xl'>03</p>
-                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>AWS, Docker</h1>
+                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>Tanstack Query, React Router, React Hook Form, Zod, Fastify.js (Learning) </h1>
                                         </div>
                                     </div>
                                 </div>
@@ -125,7 +125,7 @@ const About = ({ id }) => {
                                     <div>
                                         <div className='flex gap-4 items-center sm:text-2xl'>
                                             <p className='text-zinc-400 font-bold text-xl'>01</p>
-                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>React, Vue.js, Next.js</h1>
+                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>React, Next.js (Learning) </h1>
                                         </div>
                                         <hr className="my-4 bg-gray-100 h-[1px] opacity-30" />
                                         <div className='flex gap-4 items-center'>
@@ -135,14 +135,14 @@ const About = ({ id }) => {
                                         <hr className="my-4 bg-gray-100 h-[1px] opacity-30" />
                                         <div className='flex gap-4 items-center'>
                                             <p className='text-zinc-400 font-bold text-xl'>03</p>
-                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>GSAP, Framer Motion</h1>
+                                            <h1 className='text-xl font-semibold text-gray-400 sm:text-2xl'>GSAP, Framer Motion, Other UI Libraries</h1>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className='technology bg-black'>
+                        {/* <div className='technology bg-black'>
                             <hr className="bg-gray-100 h-[1px] opacity-30" />
                             <div className="skillspageOne w-full flex items-start sm:px-10 sm:py-4">
                                 <div className="num w-[40%] hidden sm:block text-4xl font-semibold">(03)</div>
@@ -175,7 +175,7 @@ const About = ({ id }) => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
 
                     </div>
                 </div>

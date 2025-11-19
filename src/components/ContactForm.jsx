@@ -17,7 +17,7 @@ const ContactForm = ({ id }) => {
 
     const onRecaptchaChange = (token) => {
         setRecaptchaToken(token);
-        console.log(token);
+        setError(null); // Clear any previous errors
     };
 
     const sendEmail = async (e) => {
@@ -33,34 +33,54 @@ const ContactForm = ({ id }) => {
 
         try {
             const currentTime = new Date().toLocaleString();
-            const formData = {
+
+            // Prepare template parameters (without reCAPTCHA token)
+            const templateParams = {
                 name: form.current.user_name.value,
                 email: form.current.user_email.value,
                 subject: form.current.subject.value,
                 message: form.current.message.value,
-                time: currentTime,
-                'g-recaptcha-response': recaptchaToken  // Add reCAPTCHA token
+                time: currentTime
             };
 
+            // Send email with reCAPTCHA token as third parameter
             const result = await emailjs.send(
                 import.meta.env.VITE_SERVICE_ID,
                 import.meta.env.VITE_TEMPLATE_ID,
-                formData
+                templateParams,
+                {
+                    publicKey: import.meta.env.VITE_PUBLIC_KEY,
+                    captcha: recaptchaToken  // Pass reCAPTCHA token here
+                }
             );
 
             console.log("✅ SUCCESS!", result.text);
             setIsSubmitted(true);
             form.current.reset();
-            recaptchaRef.current.reset();
-            setRecaptchaToken(null);
-            setTimeout(() => setIsSubmitted(false), 3000);
-        } catch (error) {
-            console.log("❌ FAILED...", error.text);
-            setError("Failed to send message. Please try again.");
             if (recaptchaRef.current) {
                 recaptchaRef.current.reset();
-                setRecaptchaToken(null);
             }
+            setRecaptchaToken(null);
+
+            // Reset success message after 5 seconds
+            setTimeout(() => setIsSubmitted(false), 5000);
+        } catch (error) {
+            console.error("❌ FAILED...", error);
+
+            // More detailed error handling
+            if (error.text) {
+                setError(`Failed to send: ${error.text}`);
+            } else if (error.message) {
+                setError(`Error: ${error.message}`);
+            } else {
+                setError("Failed to send message. Please try again.");
+            }
+
+            // Reset reCAPTCHA on error
+            if (recaptchaRef.current) {
+                recaptchaRef.current.reset();
+            }
+            setRecaptchaToken(null);
         } finally {
             setIsLoading(false);
         }
@@ -84,29 +104,26 @@ const ContactForm = ({ id }) => {
                     </h2>
 
                     {error && (
-                        <div className="mb-4 p-3 bg-red-500/20 border border-red-500 text-red-200 rounded-lg">
+                        <div className="mb-4 p-3 bg-red-500/20 border border-red-500 text-red-200 rounded-lg text-sm">
                             {error}
                         </div>
                     )}
 
                     {isSubmitted && (
                         <div className="mb-4 p-3 bg-green-500/20 border border-green-500 text-green-200 rounded-lg">
-                            Message sent successfully!
+                            ✅ Message sent successfully!
                         </div>
                     )}
-                    {/* Add this right before your submit button */}
 
-
-                    {/* ✅ Removed "sendForm" — switched to "send" with controlled formData */}
                     <form
                         ref={form}
                         onSubmit={sendEmail}
-                        className="flex flex-col space-y-4 bg-transparent font-['typewriter']"
+                        className="flex flex-col space-y-4 bg-transparent"
                     >
                         {/* Name */}
                         <input
                             type="text"
-                            name="user_name" // kept name for React form reference, maps to {{name}}
+                            name="user_name"
                             placeholder="Drop a name"
                             className="w-full px-4 py-3 rounded-lg bg-black/30 border border-gray-700 text-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400"
                             required
@@ -143,26 +160,30 @@ const ContactForm = ({ id }) => {
                             name="message"
                             rows="4"
                             placeholder="Say hello or drop a note..."
-                            className="w-full px-4 py-3 rounded-lg bg-black/30 border border-gray-700 text-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                            className="w-full px-4 py-3 rounded-lg bg-black/30 border border-gray-700 text-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 resize-none"
                             required
                             disabled={isLoading}
                         ></textarea>
-                        {!isSubmitted && (  // Only show if form is not submitted
-                            <div className="my-4">
+
+                        {/* reCAPTCHA */}
+                        {!isSubmitted && (
+                            <div className="flex justify-center my-4">
                                 <ReCAPTCHA
                                     ref={recaptchaRef}
                                     sitekey={import.meta.env.VITE_SITE_KEY}
                                     onChange={onRecaptchaChange}
+                                    theme="dark"
                                 />
                             </div>
                         )}
+
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            disabled={isLoading}
-                            className={`w-full py-3 rounded-lg font-semibold transition flex items-center justify-center ${isLoading
-                                ? "bg-gray-500 cursor-not-allowed"
-                                : "bg-white text-black hover:bg-gray-200"
+                            disabled={isLoading || !recaptchaToken}
+                            className={`w-full py-3 rounded-lg font-semibold transition flex items-center justify-center ${isLoading || !recaptchaToken
+                                    ? "bg-gray-500 cursor-not-allowed"
+                                    : "bg-white text-black hover:bg-gray-200"
                                 }`}
                         >
                             {isLoading ? (
@@ -190,7 +211,7 @@ const ContactForm = ({ id }) => {
                                     Sending...
                                 </>
                             ) : isSubmitted ? (
-                                "Sent!"
+                                "Sent! ✓"
                             ) : (
                                 "Send Message"
                             )}

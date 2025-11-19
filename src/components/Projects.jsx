@@ -145,7 +145,7 @@ const Projects = ({ id }) => {
                                     <div className='sm:flex sm:justify-between sm:py-3'>
                                         <div className='mt-5 sm:mt-0'>
                                             <p className='text-lg font-bold'>Web Development & GEN AI</p>
-                                            <h2 className='text-2xl font-semibold'>Movie Recommendation</h2>
+                                            <h2 className='text-2xl font-semibold'>AI Chat App </h2>
                                         </div>
                                         <div className='flex justify-start mt-5 sm:mt-0 sm:justify-center items-end gap-5'>
                                             <div className='px-3 py-1 rounded-full border-1 border-zinc-200 bg-transparent flex justify-center items-center text-sm w-fit h-fit'>Development</div>
